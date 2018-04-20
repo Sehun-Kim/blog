@@ -16,7 +16,7 @@ resume: true
 resume-external: true
 resume-url: https://1drv.ms/b/s!AhFo_zEaa9ijxg5Vt4U_1bHl6VvV
 
-url: https://sehun-kim.github.io/sehun.github.io/
+url: JEKYLL_ENV=production bundle exec jekyll build
 # your url: http://USERNAME.github.io
 
 permalink: /:title/
