@@ -12,6 +12,9 @@ category: blog
 author: sehunkim
 description: 여러 옵션들로 마크다운 문법 소개
 star: false # true로할 경우 제목에 highlight 처리가 됨
+sitemap :
+  changefreq : daily
+  priority : 1.0
 ---
 
 ## Summary:
