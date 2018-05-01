@@ -1,0 +1,129 @@
+---
+title: "순열검사"
+layout: post
+date: 2018-04-29
+image: /assets/images/markdown.jpg
+headerImage: false
+tag:
+- Python3
+- Algorithm
+- 프로그래머스
+category: blog
+author: sehunkim
+description: 여러 옵션들로 마크다운 문법 소개
+star: false # true로할 경우 제목에 highlight 처리가 됨
+---
+
+## Summary:
+
+오늘은 프로그래머스의 모의테스트 해설 강의에 첨부된 순열 검사 문제를 풀어보겠당.
+(야매풀이기에 너무 믿지는 말아주시길..)
+
+### 문제설명
+
+길이가 n인 배열에 1부터 n까지 숫자가 중복 없이 한 번씩 들어 있는지를 확인하려고 합니다.
+1부터 n까지 숫자가 중복 없이 한 번씩 들어 있는 경우 true를, 아닌 경우 false를 반환하도록 함수 solution을 완성해주세요.
+
+**제한사항**
+- 배열의 길이는 10만 이하입니다.
+- 배열의 원소는 10만 이하의 자연수입니다.
+
+---
+
+## 첫 풀이
+
+
+길이 가 n인 배열을 매개변수로 받아, 1~n 까지의 숫자가 중복 없이 빠짐없이 들어있는지 확인하는 메소드를 만드는 문제
+
+
+예를들어 **[1, 3, 2]** 라는 배열이 주어지면 배열의 길이는 3이므로 배열안에 1, 2, 3이라는 숫자가 들어있는지 확인하고, 맞으면 **True** 만약 [1, 3, 4] 혹은 [1, 2, 2] 처럼 중복이나 배열의 길이를 벗어나는 숫자가 있다면 **False** 를 반환하면 된다.
+
+
+{% highlight py %}
+def solution(arr):
+  # 1~n 까지 수가 옳은 위치에 있는지 확인해줄 check 배열을 만듬. 0 없음 1 있음
+  check = [0 for i in range(100000)] # 배열의 최대 길이가 1부터 최대 10만
+
+  for i in arr: # arr안의 숫자를 모두 순회 하며
+    check[i - 1] += 1 # arr의 숫자에 맞는 인덱스에 1을 넣어줌
+
+  for j in range(len(arr)):
+    if (check[j] > 1 or check[j] == 0):
+      return False
+
+  return True
+{% endhighlight %}
+
+
+#### 1. 숫자가 제자리에 있는지 확인할 check 배열을 만든다.
+{% highlight py %}
+check = [0 for i in range(100000)]
+{% endhighlight %}
+<span>
+위 코드는 숫자를 체크할 배열(check)을 만들고 각 자리 값을 0으로 초기화 한다. 이 때, 배열의 길이가 최대 10만이기에 배열의 길이를 10만으로 만든다.
+</span>
+
+#### 2. 주어진 배열에 값이 있는지 check 배열에 체크한다.
+{% highlight py %}
+for i in arr:
+  check[i - 1] += 1
+{% endhighlight %}
+<span>
+주어진 배열을 순회하며 해당 숫자가 있으면 배열에 위치에 1을 넣어 체크하는 코드를 넣었다.
+</span>
+
+#### 3. check 배열로 올바른 위치에 올바른 값들의 갯수가 있는지 확인한다.
+{% highlight py %}
+for j in range(len(arr)):
+  if (check[j] > 1 or check[j] == 0):
+    return False
+
+return True
+{% endhighlight %}
+<span>
+마지막으로 check배열을 주어진 배열의 길이만큼 순서대로 검사하여, 값이 1보다 큰 경우(중복)와 0인경우(없을때) **False** 를 리턴하고 검사를 통과한 경우 **True** 를 리턴하게 하였다.</span>
+
+---
+
+## 두 번째 풀이
+
+
+생각해보니 Python을 쓰면서 굳이 이렇게 길게 코드를 쓸 필요가 있나 싶었다. **sort()** 메소드를 활용하면 코드를 좀 더 간편하게 짤 수 있다.
+
+
+{% highlight py %}
+def solution(arr):
+    arr.sort()
+    for i in range(len(arr)):
+        if(i + 1 != arr[i]):
+            return False
+
+    return True
+{% endhighlight %}
+
+
+#### 1. 매개변수로 받은 배열을 정렬
+{% highlight py %}
+arr.sort()
+{% endhighlight %}
+<span>
+[3,2,4]이면 [2,3,4]로 [4,2,1,3]이면 [1,2,3,4]로 정렬해줌
+</span>
+
+#### 2. 배열의 길이만큼 순서대로 순회하며 해당 위치에 해당 값이 있는지 검사
+{% highlight py %}
+for i in range(len(arr)):
+    if(i + 1 != arr[i]):
+        return False
+
+return True
+{% endhighlight %}
+<span>
+i값은 순서대로 증가하고(i값은 0부터 배열의 길이 전까지 증가) 배열이 이미 **정렬된 상태** 이기 때문에 i+1와 배열의 i위치의 값이 같지 않으면 **False** 를 리턴한다.
+</span>
+
+
+<br>
+
+
+첫 풀이보다 코드 수가 확연히 줄어 들었다. 정답의 조건은 배열에 같은 숫자의 중복없이 한 번씩 들어 있어야 한다. 크기순으로 정렬하게 되면 중복된 수는 나란히 있게 되고 크기 순이기때문에 없는 수를 찾기 쉬워진다. 때문에 정렬을 하여 for문을 사용하면, check 배열을 만들어 검사 하는 것보다 메모리 공간 낭비없이 효율적으로 확인할 수 있다.

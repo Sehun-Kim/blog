@@ -1,6 +1,6 @@
 # main text of home
 name: Sehun Kim
-bio: 후로그래머가 되고싶은 경영학도
+bio: 경영학도의 야매 프로그래밍
 
 # twitter summary info
 description: A blog about technology and stuff related
@@ -55,7 +55,7 @@ email: sechun0215@gmail.com
 authors:
     sehunkim:
         name: Sehun Kim
-        bio: 후로그래머가 되고싶은 경영학도
+        bio: 야매 프로그래머
         external-image: false
         picture: assets/images/profile.jpg
 
