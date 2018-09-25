@@ -1,0 +1,266 @@
+---
+title: "스택 수열"
+layout: post
+date: 2018-09-25
+image: /assets/images/markdown.jpg
+headerImage: false
+tag:
+- Java
+- Algorithm
+- 백준
+category: blog
+author: sehunkim
+description: 알고리즘 문제 풀이
+star: false # true로할 경우 제목에 highlight 처리가 됨
+sitemap :
+  changefreq : daily
+  priority : 1.0
+---
+
+## Summary:
+
+1부터 n까지의 수를 스택에 넣었다가 뽑아 늘어놓아. 처음 만든 입력했던 순서의 수열을 만드는 문제다.
+
+문제를 이해할 때 *수를 정렬한 후 스택에 넣어야 한다* 라는 규칙에 사로잡혀, 문제를 제대로 이해하지 못하고 코드만 길게 쓰다가 혼자 풀기를 포기하고, [다른 블로그의 풀이](http://blog.naver.com/PostView.nhn?blogId=occidere&logNo=220812563361)를 참고 하여 문제를 풀었다.
+
+### 문제설명
+
+스택 (stack)은 기본적인 자료구조 중 하나로, 컴퓨터 프로그램을 작성할 때 자주 이용되는 개념이다. 스택은 자료를 넣는 (push) 입구와 자료를 뽑는 (pop) 입구가 같아 제일 먼저 들어간 자료가 제일 나중에 나오는 (FILO, first in last out) 특성을 가지고 있다.
+
+1부터 n까지의 수를 스택에 넣었다가 뽑아 늘어놓음으로써, 하나의 수열을 만들 수 있다. 이때, *스택에 push하는 순서는 반드시 오름차순을 지키도록 한다* 고 하자. 임의의 수열이 주어졌을 때 스택을 이용해 그 수열을 만들 수 있는지 없는지, 있다면 어떤 순서로 push와 pop 연산을 수행해야 하는지를 알아낼 수 있다. 이를 계산하는 프로그램을 작성하라.
+
+**입력/출력**
+
+```
+[입력]
+8
+4
+3
+6
+8
+7
+5
+2
+1
+```
+> 첫 줄에 n (1 ≤ n ≤ 100,000)이 주어진다. 둘째 줄부터 n개의 줄에는 수열을 이루는 1이상 n이하의 정수가 하나씩 순서대로 주어진다. 물론 같은 정수가 두 번 나오는 일은 없다.
+
+```
+[출력]
++
++
++
++
+-
+-
++
++
+-
++
++
+-
+-
+-
+-
+-
+```
+> 입력된 수열을 만들기 위해 필요한 연산을 한 줄에 한 개씩 출력한다. push연산은 +로, pop 연산은 -로 표현하도록 한다. 불가능한 경우 NO를 출력한다.
+
+*불가능한 경우*
+```
+[입력]
+5
+1
+2
+5
+3
+4
+```
+```
+[출력]
+NO
+```
+
+### 첫 풀이
+
+첫 풀이는 완벽히 코드를 짠 것은 아니지만 설계는 이렇다.
+
+{% highlight java %}
+Scanner sc = new Scanner(System.in);
+int n = sc.nextInt();		
+List<Integer> list = new ArrayList<Integer>(); // 처음 순서대로 입력받은 리스트
+List<Integer> sortedList; // 순서대로 정렬된 리스트
+
+// 순서대로 값 넣기
+for(int i=0; i<n; i++){
+  list.add(sc.nextInt());
+}
+
+sortedList = list;
+Collections.sort(sortedList); // 정렬
+
+List<Integer> result = new ArrayList<Integer>(); // 숫자 결과
+Stack<Integer> stack = new Stack<Integer>(); // 스택
+List<String> stackResult = new ArrayList<String>(); // push, pop이 들어갈 리스트
+{% endhighlight %}
+
+- 정렬하기 전 순서로 값이 들어있는  `list`
+- 순서대로 정렬되어 있는 `sortedList`
+- 숫자를 스택에서 뺀 값을 순서대로 넣어서 `list`와 순서를 비교할 `result`
+- "-", "+" 값이 들어있을 `stackResult`
+
+{% highlight java %}
+while(list.size() != 0){
+  // 스택의 top에 지정한 값이 있을 경우 해당 숫자를 pop한다.
+  if(stack.peek() == list.get(0)){
+    result.add(stack.pop());
+    list.remove(0);
+    stackResult.add("-");
+    }else{
+      int idx = 0;
+      // 스택의 top에 지정한 값이 없을 경우 해당 숫자까지 stack에 값을 push.
+      while(sortedList.get(idx) != list.get(0)){
+        stack.push(sortedList.remove(idx));
+        idx++;
+			}
+      stack.push(sortedList.remove(++idx));
+      stackResult.add("+");
+    }
+  }
+
+  // 결과출력
+  if(checkResult(list, result)){
+    for(int i=0; i<stackResult.size(); i++){
+      System.out.println(stackResult.get(i));
+    }
+    }else{
+      System.out.println("NO");
+    }
+{% endhighlight %}
+
+{% highlight java %}
+// list와 result의 값들의 순서가 같은지 비교하는 메소드
+public static boolean checkResult(List<Integer> list, List<Integer> result) {
+  for(int i=0; i<result.size(); i++){
+    if(result.get(i) != list.get(i)){
+      return false;
+    }
+  }
+  return true;
+}
+{% endhighlight %}
+
+1. list의 값이 없을 때까지 반복한다.
+2. 스택의 top에 list의 첫번째 값이 있으면 해당 숫자를 pop하여 result에 넣어주고
+- list에선 값을 지워준다.
+- stackResult에는 "-"를 넣어준다.
+3. 만약 스택 top에 원하는 값이 없으면 해당 숫자까지 stack에 값을 넣어준다.
+- stackResult에 "+"를 넣어준다.
+4. list와 result에 들어있는 값들의 순서가 같은지 확인한다.
+- 순서가 같으면 stackResult에 들어있는 값들을 출력
+- 순서가 다르면 "NO"를 출력
+
+안돌아간다.
+
+`list`의 값을 순서대로 줄이는 것으로 반복을 종료시켰는데 그렇게 되면 마지막 결과비교할 `list`가 비어 버려 나중에 비교할 수 없다.
+또, 순서가 잘못된 `list`로 반복문을 돌리게 되면 무한루프에 빠지게 된다..
+
+### 정답
+
+애초에 정직하게 값을 정렬하고 스택으로 원래 값처럼 정렬이 되는지 하나하나 비교할 필요가 없다.
+
+*스택에 값을 넣을 때는 오름차순으로 순서대로 넣을 수 있다.*
+
+그렇다면 모든 값을 한번에 입력받는 것이 아니라. 값을 입력 받을 때 값이 스택에 없는 경우 해당값까지 스택에 push를 해주고 pop을 해주면 된다. 만약 값이 있다면 해당값을 바로 pop해주면 되는 것이다. 이 때 무조건 푸쉬를 하든 팝을 하든 값을 입력 받았을 때 한번은 pop을 한다. 못할 경우 수열을 못 만들게 된다.
+
+예를 들어보면
+
+> [입력] 4
+
+```
+stack = []
+
+4가 없기 때문에 stack에 4, 3, 2, 1 을 넣어준 후
+stack = [4, 3, 2, 1]
+
+4를 pop 해준다.
+stack = [3, 2, 1]
+```
+
+> [입력] 3
+
+```
+stack = [3, 2, 1]
+
+3이 top에 있기 때문에 3을 pop해주면 된다.
+stack = [2, 1]
+```
+
+이런식으로 반복하게 되는데 만약 현재 스택에 있는 값보다 큰 값이 입력된 경우 지금까지 있던 값중 최대값보다 크고 입력된 값까지 값을 push 해주면 된다.
+
+> [입력] 6
+
+```
+stack = [2, 1]
+
+지금까지 입력된 값 중 최댓값은 4 때문에 5, 6을 스택에 넣어준 후
+stack = [6, 5, 2, 1]
+
+6을 pop해주면 된다.
+stack = [5, 2, 1]
+```
+
+잘못된 경우는 입력받은 값이 현재 최대값보다 작은 경우이다.
+> [입력] 2
+
+```
+stack = [5, 2, 1]
+
+원하는 수열 -> 4, 3, 6, 2
+예상 수열 -> 4, 3, 6, 5, 2
+
+지금까지 입력된 값 중 최댓값은 6이다.
+2를 꺼내기 위해선 5가 있기 때문에 5를 먼저 pop해주게 되면 수열의 순서가 달라지게 된다.
+```
+
+이렇게 되면 "NO"를 출력하면 된다.
+
+#### 최종코드
+
+{% highlight java %}
+public class Num1874{
+	public static void main(String[] args) throws Exception {
+		// Scanner 객체보다 빠르게 하기 위해 사용. 한 줄을 통째로 입력받는다.
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder(); // String 연산 시간을 줄이기 위해 사용
+
+		int n = Integer.parseInt(br.readLine()); // 입력할 숫자 갯수
+
+		int temp; // 입력한 값
+		int max = 0; // stack안에서 제일 큰 값
+		int top = 0; // stack에서 최상단에 있는 값
+		int[] stack = new int[n];
+
+		while(n-- > 0){ // 입력받은 값의 수가 0보다 클 때 까지
+			temp = Integer.parseInt(br.readLine());
+			if(temp > max){
+				// 스택에 값이 없을 경우
+				for(int i=max+1; i<=temp; i++){
+					stack[top++] = i;
+					sb.append("+\n"); // push
+				}
+				max = temp;
+			}else if(stack[top-1] != temp) { // 종료조건을 확인하기 위해
+				System.out.println("NO");
+				return; // 아예 메소드를 종료시켜야 하기때문에 break을 쓰지 않는다.
+			}
+			// 무조건 한번은 pop을 하기 때문에
+			top--;
+			sb.append("-\n"); // pop
+		}
+		System.out.println(sb);
+	}
+}
+{% endhighlight %}
+
+---
