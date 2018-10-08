@@ -1,0 +1,167 @@
+---
+title: "JAVA 초보를 위한 객체지향설계 방법"
+layout: post
+date: 2018-09-30
+image: /assets/images/markdown.jpg
+headerImage: false
+tag:
+- Java
+- 객체지향설계
+category: blog
+author: sehunkim
+description: 객체지향설계 방법
+star: true # true로할 경우 제목에 highlight 처리가 됨
+sitemap :
+  changefreq : daily
+  priority : 1.0
+---
+
+### Description
+기초적인 JAVA 문법만 아는 초보들을 위한 ***객체지향설계*** 를 정리한 문서.
+```
+- 비 정기적으로 공부한 내용으로 업데이트할 것.
+- 오타/잘못된 내용 있을 시 수시로 수정할 것.
+```
+<br>
+<br>
+
+<!-- index-->
+
+
+# INDEX
+1. [Java Coding Convention](#0)
+
+<br>
+<br>
+<!-- 내용 -->
+## <a id="0"></a>1. Java Coding Convention
+
+> Oracle의 공식 [Java 8 Coding Convention](https://www.oracle.com/technetwork/java/javase/documentation/codeconventions-141388.html)을 참조하였다.
+
+Java 코드 작성 시 어떤 규칙을 지켜야 하는지 Oracle의 공식 가이드에 자세히 설명되어있다. 그러나 평소에 가이드를 모두 숙지하고 있기 어렵기 때문에 내가 자주 틀리는 공백(White Space) 규칙만 정리하겠다.
+
+#### Blank Lines
+공백행은 논리적으로 관련된 코드 섹션을 나누어 가독성을 향상 시킴
+
+##### 빈 줄 두 칸
+- 소스파일의 섹션 사이
+
+{% highlight java %}
+package test; // 패키지 영역
+// Blank Line
+import java.util.Scanner; // import 영역
+// Blank Line
+public Test{ // class 영역
+
+}
+{% endhighlight %}
+
+- Class 와 Interface 정의 사이
+
+{% highlight java %}
+// Blank Line
+class Test {
+}
+// Blank Line
+inteface Test2 {
+}
+{% endhighlight %}
+
+##### 빈 줄 한 칸
+- 메소드 사이
+
+{% highlight java %}
+public void method1() {
+
+}
+// Blank Line
+public void method2() {
+
+}
+{% endhighlight %}
+
+- 메소드의 지역 변수와 첫 번째 명령문 사이
+
+{% highlight java %}
+public void method1() {
+  int sum = 0;
+  // Blank Line
+  for (int i = 0; i < 10; i++) {
+    sum += i;
+  }
+}
+{% endhighlight %}
+
+- block 주석과 한 줄 주석 전에
+
+{% highlight java %}
+// Blank Line
+/*
+* 블록코멘트
+*/
+
+// Blank Line
+// 한 줄 주석
+{% endhighlight %}
+
+- 가독성을 향상시키기 위해 메소드 내 논리적인 영역 사이에 공백라인 추가
+
+{% highlight java %}
+public void mehtod(int n) {
+  int sum = 0;
+  // Blank Line
+  for (int i=0; i < n; i++) {
+    sum += i;
+  }
+  // Blank Line
+  for (int i=n; i > 0; i--) {
+    sum -= i;
+  }
+}
+{% endhighlight %}
+
+
+
+#### Blank Spaces
+
+
+- 키워드 뒤에 괄호가 오면 공백을 추가해야한다.
+
+{% highlight java %}
+while (true) {
+    ...
+}
+{% endhighlight %}
+
+**Tip:** 공백은 메서드 이름과 여는 괄호 사이에 사용하면 안됩니다. ex) public void *method()* {}
+
+- 인수 리스트의 쉼표 뒤에는 공백이 와야한다.
+{% highlight java %}
+public int add(int a, int b) {
+  return a + b;
+}
+{% endhighlight %}
+
+- 모든 이진연산자를 피 연산자와 구분하기 위해 공백을 사용해야 한다. 단항 연산자의 경우 피연산자와 공백없이 붙여야한다.
+{% highlight java %}
+int a = 1;
+int b = 2;
+
+// 이진연산자
+int result = a + b;
+// 단항연산자
+a++;
+{% endhighlight %}
+
+- for문의 표현식은 공백으로 구분되어야 한다.
+{% highlight java %}
+for (expr1; expr2; expr3)
+{% endhighlight %}
+
+- 형변환(Cast)할 형태와 값 사이에는 공백이 있어야 한다.
+{% highlight java %}
+double a = 1.0;
+int result = (int) a;
+{% endhighlight %}
+
+---
