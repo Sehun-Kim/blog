@@ -17,28 +17,27 @@ sitemap :
 ---
 
 ### Description
-기초적인 JAVA 문법만 아는 초보들을 위한 ***객체지향설계*** 를 정리한 문서.
+기초적인 JAVA 문법만 아는 초보들을 위한 ***객체지향설계*** 를 정리할 문서.
 ```
-- 비 정기적으로 공부한 내용으로 업데이트할 것.
-- 오타/잘못된 내용 있을 시 수시로 수정할 것.
+- 비 정기적으로 공부한 내용으로 업데이트.
+- 오타/잘못된 내용 있을 시 정정.
 ```
-<br>
-<br>
 
 <!-- index-->
-
-
-# INDEX
-1. [Java Coding Convention](#0)
-
+### INDEX
+1. [Java Coding Convention](#1)
+2. [객체지향적 Class 설계](#2)
 <br>
 <br>
+<br>
+<br>
+
 <!-- 내용 -->
-## <a id="0"></a>1. Java Coding Convention
+## <a id="1"></a>1. Java Coding Convention
 
 > Oracle의 공식 [Java 8 Coding Convention](https://www.oracle.com/technetwork/java/javase/documentation/codeconventions-141388.html)을 참조하였다.
 
-Java 코드 작성 시 어떤 규칙을 지켜야 하는지 Oracle의 공식 가이드에 자세히 설명되어있다. 그러나 평소에 가이드를 모두 숙지하고 있기 어렵기 때문에 내가 자주 틀리는 공백(White Space) 규칙만 정리하겠다.
+Java 코드 작성 시 어떤 규칙을 지켜야 하는지 Oracle의 공식 가이드에 자세히 설명되어있다. 평소에 모든 가이드 내용을 숙지하고 있기 어렵기 때문에 자주 틀리는 공백(White Space) 규칙을 정리하겠다.
 
 #### Blank Lines
 공백행은 논리적으로 관련된 코드 섹션을 나누어 가독성을 향상 시킴
@@ -99,7 +98,6 @@ public void method1() {
 /*
 * 블록코멘트
 */
-
 // Blank Line
 // 한 줄 주석
 {% endhighlight %}
@@ -119,8 +117,6 @@ public void mehtod(int n) {
   }
 }
 {% endhighlight %}
-
-
 
 #### Blank Spaces
 
@@ -165,3 +161,68 @@ int result = (int) a;
 {% endhighlight %}
 
 ---
+
+## <a id="2"></a> 2. 객체지향적 Class 설계
+
+Class의 용도에 따라 설계 규칙이 다르다. 공통적인 부분과 용도에 따라 정리하겠다.
+
+#### 공통
+- 패키지 명은 항상 소문자로 작성
+> util, domain, view
+
+- 변수명에는 자료형을 쓰지말아라.
+> List<Car> carList; (x) List<Car> cars; (o)
+
+- 상태값이 변하는 값은 인스턴스 변수로, 상태값이 변하지 않는 값은 static 변수로 만들어라.
+
+- 인스턴스 변수는 필요할 때만 선언하라. 다른 변수를 이용해서 구할 수 있다면 중복
+> carsNums는 cars.size()로 구할 수 있기 때문에 중복이다.
+
+{% highlight java %}
+public Cars{
+  private List<Car> cars; // Car 객체들이 저장될 인스턴스 변수
+  private int carsNums; // 저장된 Car 객체들의 갯수
+
+  ...
+}
+{% endhighlight %}
+
+- 메소드에서 else를 쓰지 마라
+> else를 쓰지 않을 경우 코드가 간결해지고 메소드의 역할이 명확해진다.
+
+- 메소드를 짤 때 항시 테스트 코드를 먼저 작성하고 로직을 짤 것
+
+#### MVC 패턴
+
+- MVC : 확장성 있는 설계를 위해 핵심로직과 UI는 분리할 것
+```
+Model : 핵심로직(Domain)
+Controller : View에서 값을 얻어 Model에 분배하고 다시 Model에서 값을 받아 View로 전달하는 역할
+View : 사용자에게 입력, 출력을 하는 부분
+```
+
+- DTO : Data Transfer Object. Data 전달을 위해 필요한 객체. => MutableObject 
+```
+핵심로직을 수행하는 Model과 데이터 영역을 분리 (Model 캡슐화)
+View에 Data만 전달하기 위해 필요한 객체.
+getter와 setter를 사용하여 상태값을 변경하고 얻어 낼 수 있다.
+단, 자신의 값은 직접 변경하게 외부에서는 메시지를 보내는 형태로 값을 변경시켜야한다.
+```
+
+- VO : Value Object => ImmutableObject
+```
+VO == DTO 는 틀린말
+DTO는 java bean 규약에 따라 setter, getter를 허용하고 있다. (변경가능)
+VO는 value(값)이다. 즉 변경불가능한 값이다.
+VO는 개발자가 추상화하여 정의한 상수이다. 넓은 범위가 아닌 개발자가 원하는 범위와 타입을 지정해서 쓴다.
+```
+
+- 안전한 프로그래밍(의도하지 않은 변경)을 위해서 DTO를 제외한 핵심로직은 모두 ImmutableObject로 만들 것
+
+- 핵심로직(Model)에선 get과 set을 쓰지말아라.
+```
+데이터를 꺼낼 상황에 무조건 한번 의심해 보라.
+반드시 꺼내야 하는지 아님 메시지를 보내서 처리할 수 있는지.
+ImmutableObject의 값을 변경할 일이 생긴다면,
+메소드로 값을 변경한 새로운 객체를 생성하여라.
+```
