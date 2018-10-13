@@ -5,7 +5,7 @@ date: 2018-07-24
 image: /assets/images/markdown.jpg
 headerImage: false
 tag:
-- 내 생각
+- 회고록
 category: blog
 author: sehunkim
 description: 2018년 상반기 돌아보기

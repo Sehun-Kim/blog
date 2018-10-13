@@ -1,5 +1,5 @@
 ---
-title: "JAVA 초보를 위한 객체지향설계 방법"
+title: "JAVA 초보를 위한 객체지향 공부"
 layout: post
 date: 2018-09-30
 image: /assets/images/markdown.jpg
@@ -7,6 +7,8 @@ headerImage: false
 tag:
 - Java
 - 객체지향설계
+- TDD
+- MVC
 category: blog
 author: sehunkim
 description: 객체지향설계 방법
@@ -17,7 +19,8 @@ sitemap :
 ---
 
 ### Description
-기초적인 JAVA 문법만 아는 초보들을 위한 ***객체지향설계*** 를 정리할 문서.
+기초적인 JAVA 문법만 아는 초보들을 위한 ***객체지향설계*** 와 코딩컨벤션을 정리할 문서.
+
 ```
 - 비 정기적으로 공부한 내용으로 업데이트.
 - 오타/잘못된 내용 있을 시 정정.
@@ -26,11 +29,15 @@ sitemap :
 <!-- index-->
 ### INDEX
 1. [Java Coding Convention](#1)
-2. [객체지향적 Class 설계](#2)
+2. [Class 설계](#2)
+3. [TDD](#3)
+4. [MVC](#4)
 <br>
 <br>
 <br>
 <br>
+
+---
 
 <!-- 내용 -->
 ## <a id="1"></a>1. Java Coding Convention
@@ -51,7 +58,7 @@ package test; // 패키지 영역
 import java.util.Scanner; // import 영역
 // Blank Line
 public Test{ // class 영역
-
+  ...
 }
 {% endhighlight %}
 
@@ -71,11 +78,11 @@ inteface Test2 {
 
 {% highlight java %}
 public void method1() {
-
+  ...
 }
 // Blank Line
 public void method2() {
-
+  ...
 }
 {% endhighlight %}
 
@@ -162,9 +169,7 @@ int result = (int) a;
 
 ---
 
-## <a id="2"></a> 2. 객체지향적 Class 설계
-
-Class의 용도에 따라 설계 규칙이 다르다. 공통적인 부분과 용도에 따라 정리하겠다.
+## <a id="2"></a> 2. Class 설계
 
 #### 공통
 - 패키지 명은 항상 소문자로 작성
@@ -191,6 +196,20 @@ public Cars{
 > else를 쓰지 않을 경우 코드가 간결해지고 메소드의 역할이 명확해진다.
 
 - 메소드를 짤 때 항시 테스트 코드를 먼저 작성하고 로직을 짤 것
+
+
+---
+
+## <a id="3"></a>3. TDD
+
+- production package와 test package는 동일해야한다.
+> 접근제어자를 default로 하여 접근이 가능하게 한다.
+
+---
+
+## <a id="4"></a>4. MVC
+
+재사용성을 높여 비용을 절감하는 것. 특히 모델(핵심 로직)을 재사용하기 위해. 뷰와 컨트롤러만 바꾸어서 Web -> App -> API 등으로 사용할 수 있다. 핵심로직은 잘 바뀌지 않는다. 제일 많이 변경되는 곳은 View다.
 
 #### MVC 패턴
 
