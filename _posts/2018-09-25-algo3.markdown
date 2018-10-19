@@ -2,7 +2,7 @@
 title: "스택 수열(1874)"
 layout: post
 date: 2018-09-25
-image: /assets/images/markdown.jpg
+image: 
 headerImage: false
 tag:
 - Java

@@ -9,7 +9,7 @@ image: false
 headerImage: false
 projects: true
 hidden: true # don't count this post in blog pagination
-description: "프로그래밍 서적 읽고 기록하기"
+description: "책 읽고 기록하기"
 category: project
 author: sehunkim
 externalLink: false

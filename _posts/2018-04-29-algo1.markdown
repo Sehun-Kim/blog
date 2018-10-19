@@ -2,7 +2,7 @@
 title: "순열검사"
 layout: post
 date: 2018-04-29
-image: /assets/images/markdown.jpg
+image: 
 headerImage: false
 tag:
 - Python3

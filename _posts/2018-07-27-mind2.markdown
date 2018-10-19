@@ -2,7 +2,7 @@
 title: "준비만 하는 겁쟁이(2)"
 layout: post
 date: 2018-07-27
-image: /assets/images/markdown.jpg
+image: 
 headerImage: false
 tag:
 - 회고록
