@@ -60,13 +60,13 @@ ex) NullPointException, IllegalArgumentException
 ## Checked Exception, Unchecked Exception
 ![Screenshot](https://t1.daumcdn.net/cfile/tistory/266F083552E5B45E2D)
 
-- Unchecked Exception
+### Unchecked Exception
 
 `Unchecked Exception`은 명시적인 처리가 필요없는 예외이다. `RuntimeException`을 상속받는 예외들이 포함된다. **Runtime** 즉, 예외가 발생하는 시점이 컴파일이 될 때가 아닌 어플리케이션 실행 중이다.
 
 트랜잭션상에서 `Unchecked Exception`이 발생할 경우 Roll-Back된다.
 
-- Checked Exception
+### Checked Exception
 
 `Checked Exception`은 컴파일하는 시점에 발생하는 예외이다. 때문에 무조건 예외가 발생할 수 있는 코드를 컴파일 하기전에 try catch로 감싸주어야 어플리케이션을 실행할 수 있다.
 
@@ -81,7 +81,8 @@ ex) NullPointException, IllegalArgumentException
 ## 예외의 처리방식
 예외가 발생하였을 때 처리하는 방법은 보통 세 가지이다.
 
-- **직접처리** : 예외가 발생하는 부분을 try 블럭으로 감싸 catch에서 예외처리를 하는 것
+### **직접처리**
+예외가 발생하는 부분을 try 블럭으로 감싸 catch에서 예외처리를 하는 것
 
 {% highlight java %}
 public static void main(String[] args) {
@@ -95,7 +96,8 @@ public static void main(String[] args) {
 }
 {% endhighlight %}
 
-- **예외던지기** : `throws` 키워드를 사용하여 예외가 발생한 부분이 아닌 예외가 발생하는 로직을 호출한 부분으로 예외를 넘긴다.
+### **예외던지기**
+`throws` 키워드를 사용하여 예외가 발생한 부분이 아닌 예외가 발생하는 로직을 호출한 부분으로 예외를 넘긴다.
 
 {% highlight java %}
 public static void main(String[] args) {
@@ -113,8 +115,7 @@ public static void printNum(int[] arr, int idx) throws IndexOutOfBoundException 
 }
 {% endhighlight %}
 
-- **예외전환**
-
+### **예외전환**
 예외가 발생하였을 때 `의미있는 이름`으로 바꾸는 경우와 `Checked Exception을 Unchecked Exception으로 바꾸어` 쓰고싶을때 사용한다. Checked Exception의 경우 무조건 try catch 문을 사용해서 처리해주어야 한다. 때문에 예외를 다른 곳으로 던지고 싶을때 RuntimeException으로 변환하여 던져우어야한다. 두 경우 모두 `throw` 키워드로 예외를 발생시킨다.
 
 {% highlight java %}
