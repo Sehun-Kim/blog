@@ -55,6 +55,8 @@ Java 코드 작성 시 어떤 규칙을 지켜야 하는지 Oracle의 공식 가
 
 ##### 빈 줄 두 칸
 
+- Class 와 Interface 정의 사이
+
 {% highlight java %}
 package test; // 패키지 영역
 // Blank Line
@@ -74,9 +76,10 @@ class Test {
 inteface Test2 {
 }
 {% endhighlight %}
-- Class 와 Interface 정의 사이
 
 ##### 빈 줄 한 칸
+
+- 메소드 사이
 
 {% highlight java %}
 public void method1() {
@@ -87,7 +90,8 @@ public void method2() {
   ...
 }
 {% endhighlight %}
-- 메소드 사이
+
+- 메소드의 지역 변수와 첫 번째 명령문 사이
 
 {% highlight java %}
 public void method1() {
@@ -98,7 +102,8 @@ public void method1() {
   }
 }
 {% endhighlight %}
-- 메소드의 지역 변수와 첫 번째 명령문 사이
+
+- 가독성을 향상시키기 위해 메소드 내 논리적인 영역 사이에 공백라인 추가
 
 {% highlight java %}
 // Blank Line
@@ -109,7 +114,7 @@ public void method1() {
 // 한 줄 주석
 {% endhighlight %}
 
-- 가독성을 향상시키기 위해 메소드 내 논리적인 영역 사이에 공백라인 추가
+- block 주석과 한 줄 주석 전에
 
 {% highlight java %}
 public void mehtod(int n) {
@@ -124,20 +129,20 @@ public void mehtod(int n) {
   }
 }
 {% endhighlight %}
-- block 주석과 한 줄 주석 전에
 
 #### Blank Spaces
 
-
+- 키워드 뒤에 괄호가 오면 공백을 추가해야한다.
 
 {% highlight java %}
 while (true) {
     ...
 }
 {% endhighlight %}
-- 키워드 뒤에 괄호가 오면 공백을 추가해야한다.
 
 **Tip:** 공백은 메서드 이름과 여는 괄호 사이에 사용하면 안됩니다. ex) public void *method()* {}
+
+  - 모든 이진연산자를 피 연산자와 구분하기 위해 공백을 사용해야 한다. 단항 연산자의 경우 피연산자와 공백없이 붙여야한다.
 
 {% highlight java %}
 public int add(int a, int b) {
@@ -155,18 +160,19 @@ int result = a + b;
 // 단항연산자
 a++;
 {% endhighlight %}
-- 모든 이진연산자를 피 연산자와 구분하기 위해 공백을 사용해야 한다. 단항 연산자의 경우 피연산자와 공백없이 붙여야한다.
 
 {% highlight java %}
 for (expr1; expr2; expr3)
 {% endhighlight %}
 
 - 형변환(Cast)할 형태와 값 사이에는 공백이 있어야 한다.
+
+- for문의 표현식은 공백으로 구분되어야 한다.
+
 {% highlight java %}
 double a = 1.0;
 int result = (int) a;
 {% endhighlight %}
-- for문의 표현식은 공백으로 구분되어야 한다.
 
 ---
 
@@ -182,6 +188,8 @@ int result = (int) a;
 
 - 상태값이 변하는 값은 인스턴스 변수로, 상태값이 변하지 않는 값은 static 변수로 만들어라.
 
+- 인스턴스 변수는 필요할 때만 선언하라. 다른 변수를 이용해서 구할 수 있다면 중복
+
 {% highlight java %}
 // carsNums는 cars.size()로 구할 수 있기 때문에 중복이다.
 public Cars{
@@ -191,7 +199,6 @@ public Cars{
   ...
 }
 {% endhighlight %}
-- 인스턴스 변수는 필요할 때만 선언하라. 다른 변수를 이용해서 구할 수 있다면 중복
 
 - 메소드에서 else를 쓰지 마라. else를 쓰지 않을 경우 코드가 간결해지고 메소드의 역할이 명확해진다.
 
@@ -201,13 +208,17 @@ public Cars{
 
 - 다형성을 잘 활용하면 서로간에 영향을 미치지 않은 상태에서 기능을 확장할 수 있다.
 
+- "조합" (Composition) : A가 B를 가진다. (has a)
+
 {% highlight java %}
 // 변경에 유연하게 대응할 수 있다.
 class A {
   private B; // 여기서 B를 비슷한 기능을 가진 다른 객체로 바꾸어 사용이 가능
 }
 {% endhighlight %}
-- "조합" (Composition) : A가 B를 가진다. (has a)
+
+- "상속" (Inheritance) : A는 B다. (is a). 핵심로직일 경우 외부에서 접근하지 못하게하고 자식만 접근하도록 protected 키워드를 쓸 것.
+'부모는 자식을 가리킬 수 있다.'
 
 {% highlight java %}
 // 기능을 '확장'하기위해 사용한다.
@@ -237,8 +248,7 @@ class B extend A {
 
 }
 {% endhighlight %}
-- "상속" (Inheritance) : A는 B다. (is a). 핵심로직일 경우 외부에서 접근하지 못하게하고 자식만 접근하도록 protected 키워드를 쓸 것.
-'부모는 자식을 가리킬 수 있다.'
+
 
 - 여러 클래스의 *일부분만* '중복'일 때 `abstract 클래스`의 `abstract 메소드`로 만들면 중복을 제거할 수 있다.
 
