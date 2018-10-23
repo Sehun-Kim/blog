@@ -40,7 +40,7 @@ ex) NullPointException, IllegalArgumentException
 
 예외도 `Unchecked Exception`과 `Checked Exception`으로 나뉜다. 나뉘는 기준은 `RuntimeException`을 상속받는 Exception과 아닌 Exception으로 나뉜다.
 
-#### 트랜잭션(Transaction)
+#### Tip : 트랜잭션(Transaction)
 
 예외의 종류에대해 설명하기 앞서 트랜젝션에 대해 알아야한다. `Transaction`이란 하나의 작업단위를 뜻하며 DB를 공부하다보면 자주 접하게 될 단어이다.
 
@@ -72,6 +72,11 @@ ex) NullPointException, IllegalArgumentException
 
 트랜잭션상에서 `Checked Exception`이 발생할 경우 Roll-Back하지 않고 바로 예외를 던진다. 때문에 별도의 처리를해주어야 한다.
 
+```
+- 호출하는 작업이 Exception을 활용해서 무언가 의미있는 작업을 할 수 있을 경우 'Checked Exception'을 사용할 것
+- 호출하는 작업이 Exception을 catch해서 상황을 해결할 수 없다면 'Unchecked Exception'을 사용할 것
+- 명확하지 않다면 `Unchecked Exception`을 사용할 것
+```
 
 ## 예외의 처리방식
 예외가 발생하였을 때 처리하는 방법은 보통 세 가지이다.
@@ -107,7 +112,6 @@ public static void printNum(int[] arr, int idx) throws IndexOutOfBoundException 
   System.out.println(arr[idx]); // IndexOutOfBoundException 발생
 }
 {% endhighlight %}
-
 
 - **예외전환**
 
@@ -145,5 +149,35 @@ class Main {
     System.out.println(arr[idx]); // IndexOutOfBoundException 발생
   }
 
+}
+{% endhighlight %}
+
+#### Tip : 여러개의 예외 처리 방식
+
+- 예외를 여러개 던지고 싶은 경우
+{% highlight java %}
+// 쉼표(,)로 여러개 전달 가능  
+public void sendError() throws NullPointException, IllegalArgumentException {}
+
+// 부모 예외 클래스로 한번에 전달 가능
+public void sendError() throws Exception {}
+{% endhighlight %}
+
+- 여러개의 예외를 처리하고 싶은 경우
+{% highlight java %}
+// catch 블록을 여러개 만들어서 처리 가능
+try {
+  // 여러가지 에러 발생부분
+} catch(NullPointException e1) {
+  // 처리1
+} catch(IllegalArgumentException e2) {
+  // 처리2
+}
+
+// 부모 예외클래스로 한번에 처리 가능
+try {
+  // 여러가지 에러 발생부분
+} catch(Exception e) {
+  // 한번에 처리
 }
 {% endhighlight %}
