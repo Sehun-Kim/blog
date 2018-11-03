@@ -1,5 +1,5 @@
 ---
-title: "Checked/Unchecked Exception"
+title: "[JAVA] Checked/Unchecked Exception"
 layout: post
 date: 2018-10-23
 image:

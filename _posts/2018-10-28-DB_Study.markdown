@@ -1,11 +1,13 @@
 ---
-title: "DB Study"
+title: "mySql Tip"
 layout: post
 date: 2018-10-28
 image:
 headerImage: false
 tag:
 - mySql
+- Database
+- JDBC
 category: blog
 author: sehunkim
 description: DB 공부
@@ -15,10 +17,30 @@ sitemap :
   priority : 1.0
 ---
 
-- DB 내부 연산 순서
+## Summary:
+mySql을 공부하며 알게되는 것들 무작위 정리.
+
+- DB 쿼리의 내부 연산 순서
 > Where -> Select -> ORDER BY -> LIMIT
 
 - update 순서는 왼 --> 오 (Oracle의 경우 순서 x, 무조건 갱신이전의 값으로 처리함)
 > UPDATE sample SET no = no + 1, a = no;
 
 - 논리삭제 vs 물리삭제
+> 논리삭제 : 체크할 수 있는 컬럼을 만들어서 물리적으로 삭제되진 않았지만 조회할 때 체크 컬럼을 확인하여 삭제 여부를 판단.
+> 물리삭제 : 실제 물리적 저장소 내에 data를 delete하는 것
+
+- database들 조회
+> SHOW DATABASES;
+
+- database 선택
+> USE database_name;
+
+- table 조회
+> DESC table_name;
+
+- table 삭제
+> DROP TABLE table_name;
+
+- port 확인
+> SHOW GLOBAL VARIABLES LIKE 'PORT';

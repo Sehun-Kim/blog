@@ -1,5 +1,5 @@
 ---
-title: "JAVA 초보를 위한 객체지향 공부"
+title: "[JAVA] 초보를 위한 객체지향 Tip"
 layout: post
 date: 2018-09-30
 image:
