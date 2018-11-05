@@ -19,18 +19,14 @@ sitemap :
 
 ## Summary:
 Java 8부터 추가된 **Stream** `API`와 **Lambda** `API`가 어떻게 쓰이는지 간단하게 정리해보겠다.
-> 참고자료 :
-> - [람다식 - 기본 문법, 타겟 타입과 함수적 인터페이스](http://palpit.tistory.com/671)
-> - [JAVA8 메소드 레퍼런스](https://imcts.github.io/java-method-reference/)
-> - [Java Study Group](https://rebeccacho.gitbooks.io/java-study-group/content/chapter14.html)
-> - [JAVA 8 스트림 튜토리얼](https://wraithkim.wordpress.com/2017/04/13/java-8-%EC%8A%A4%ED%8A%B8%EB%A6%BC-%ED%8A%9C%ED%86%A0%EB%A6%AC%EC%96%BC/)
-> - [Java8 Stream은 loop가 아니다.](https://www.popit.kr/java8-stream%EC%9D%80-loop%EA%B0%80-%EC%95%84%EB%8B%88%EB%8B%A4/)
-> -  [Java 8과 함수형 프로그래밍](https://medium.com/@goinhacker/java-8%EA%B3%BC-%ED%95%A8%EC%88%98%ED%98%95-%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D-154e6d8830f1)
-> - [JAVA 스트림 API](http://iloveulhj.github.io/posts/java/java-stream-api.html)
+>
+### index
+1. [Lambda](#1)
+2. [Stream](#4)
 
 ---
 
-### <a id="1"></a>Lambda 예제 코드
+### <a id="1"></a>Lambda 예제
 `Calculator`클래스는 `calc()`라는 메소드를 가지고 있다. `calc()`는 매개변수 `n`을 받아 1을 증가시켜 리턴한다.
 - **Calculator.class**
 {% highlight java %}
@@ -57,7 +53,7 @@ class Driver {
 
 
 ## Lambda
-Lambda란 메소드를 하나의 식(Expression)으로 표현한 것이다. **익명메소드(함수)** 생성 문법이다. 메소드를 지칭하는 명칭(메소드명)없이 구현부만으로 선언하는 것이다. 하지만 JAVA의 메소드는 **메소드 자체로 혼자 선언하여 쓰일 수 없다.** 무조건 Class 구성멤버로 선언되어야 한다.
+JAVA의 **Lambda**는 메소드를 하나의 식(Expression)으로 표현한 것이다. **익명메소드(함수)** 생성 문법이라 할 수 있다. 메소드를 지칭하는 명칭(메소드명)없이 구현부만으로 선언하는 것이다. 하지만 JAVA의 메소드는 **메소드 자체로 혼자 선언하여 쓰일 수 없다.** 무조건 Class 구성멤버로 선언되어야 한다.
 > 우리가 자주 쓰는 main() 메소드도 클래스멤버다. 어플리케이션을 실행할 때 JVM이 알아서 static main()를 찾아서 실행하는 것 뿐이다.
 
 ```
@@ -220,10 +216,11 @@ IntBinaryOperator op = Math::max;
 System.out.println(op.applyAsInt(3, 7)); // 7
 {% endhighlight %}
 
-#### <**3가지 메소드 레퍼런스**>
+**3가지 메소드 레퍼런스**
+--
 ##### **1. 정적메소드, 인스턴스메소드 참조**
 
-[코드 3](#3)은 `max()`가 `Math` 클래스의 정적메소드이기에 정적 메소드 참조방식이 된다. 만약 인스턴스 메소드일 경우 인스턴스를 생성한 후에 `인스턴스::메소드명`으로 사용할 수 있다.
+[코드 3](#3)의 `max()`가 `Math` 클래스의 정적메소드이기에 정적(static)메소드 참조방식이 된다. 만약 인스턴스 메소드일 경우 인스턴스를 생성한 후에 `인스턴스::메소드명`으로 사용할 수 있다.
 
 ##### 코드 4
 {% highlight java %}
@@ -247,6 +244,7 @@ class Driver {
 
 `ToIntBiFunction`은 `Function` 인터페이스 중 하나로써. 두 개의 매개변수를 받아 람다식의 로직을 사용하여 `applyAsInt()`를 사용했을 때 int 타입을 반환해주는 **함수적 인터페이스**이다.
 
+##### 코드 5
 {% highlight java %}
 class Driver {
   public static void main(String[] args) {
@@ -262,6 +260,7 @@ class Driver {
 ##### **3. 생성자 참조 방식**
 생성자 또한 일종의 메소드이기 때문에 메소드 레퍼런스로 쓸 수 있다.
 
+##### 코드 6
 {% highlight java %}
 class Person {
   private String name;
@@ -382,7 +381,61 @@ class Parser {
 {% endhighlight %}
 
 ## Stream
+JAVA의 **Stream**은 **컬렉션(Collection)의 요소를 하나씩 참조하여 람다식으로 처리할 수 있게 해주는 일종의 반복자**이다.
+> 헷갈리지 말아야 할게 있는데 I/O(입출력)관련 `Input/OutputStream`과는 관련이 없다.(InputStream은 java.io 패키지, Stream은 java.util 패키지이다.)
+
+#### JAVA의 Collection과 Iterator
+![Screenshot](https://www.javatpoint.com/images/java-collection-hierarchy.png)
+자바의 `Collection` 인터페이스는 `Set`, `List`, `Queue` 인터페이스 처럼 데이터를 저장하는 자료구조들의 상위에 있는 인터페이스이다. 최상위에는 `iterator()`메소드를 갖고있는 `Iterable` 인터페이스가 있다.
+
+`iterator()`는 `Iterator<T>`를 반환한다. `Iterater`는 자료안에 자료가 있는지 없는지 확인해주는 `hasNext()` 메소드와, 자료구조에 저장되어 있는 자료를 하나씩 리턴해주는 `next()` 메소드를 갖고 있다. 즉, `Collection`을 implements한 모든 자료구조들은 `iterator()`로 반복자를 만들어 반복문을 돌릴 수 있다는 것이다.
+
+{% highlight java %}
+class Driver {
+    public static void main(String[] args) {
+      List<Integer> list = Arrays.asList(1,2,3,4,5,6);
+      Iterator<Integer> iter = list.iterator();
+
+      // 순서대로 1 2 3 4 5 6 출력
+      while (iter.hasNext()) {
+        System.out.println(iter.next());
+      }
+    }
+}
+{% endhighlight %}
+
+다시 스트림으로 돌아와. 상단의 `Iterator`를 `Stream`으로 변형해보겠다.
+
+{% highlight java %}
+class Driver {
+    public static void main(String[] args) {
+      List<Integer> list = Arrays.asList(1,2,3,4,5,6);
+      // Integer 데이터를 갖는 Stream 생성
+      Stream<Integer> stream = list.stream();
+
+      // forEach()를 사용해서 1 2 3 4 5 6 출력
+      stream.forEach((Integer i) -> { System.out.println(i); });
+      /*
+      * list.stream().forEach(System.out::println);
+      * 메소드 레퍼런스를 사용하면 코드를 더 줄일 수 있음
+      */
+    }
+}
+{% endhighlight %}
+
+여기서 스트림의 첫 특징이 나온다. `forEach()`의 매개변수로 **람다식** 을 사용할 수 있다는 것이다.
+
+#### 1. 스트림의 특징
+
 
 
 
 ---
+## 참고
+> - [람다식 - 기본 문법, 타겟 타입과 함수적 인터페이스](http://palpit.tistory.com/671)
+> - [JAVA8 메소드 레퍼런스](https://imcts.github.io/java-method-reference/)
+> - [Java Study Group](https://rebeccacho.gitbooks.io/java-study-group/content/chapter14.html)
+> - [JAVA 8 스트림 튜토리얼](https://wraithkim.wordpress.com/2017/04/13/java-8-%EC%8A%A4%ED%8A%B8%EB%A6%BC-%ED%8A%9C%ED%86%A0%EB%A6%AC%EC%96%BC/)
+> - [Java8 Stream은 loop가 아니다.](https://www.popit.kr/java8-stream%EC%9D%80-loop%EA%B0%80-%EC%95%84%EB%8B%88%EB%8B%A4/)
+> -  [Java 8과 함수형 프로그래밍](https://medium.com/@goinhacker/java-8%EA%B3%BC-%ED%95%A8%EC%88%98%ED%98%95-%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D-154e6d8830f1)
+> - [JAVA 스트림 API](http://iloveulhj.github.io/posts/java/java-stream-api.html)
