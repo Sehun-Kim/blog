@@ -21,10 +21,10 @@ sitemap :
 Java 8부터 추가된 **Stream** `API`와 **Lambda** `API`가 어떻게 쓰이는지 간단하게 정리해보겠다.
 > 참고자료 :
 > - [람다식 - 기본 문법, 타겟 타입과 함수적 인터페이스](http://palpit.tistory.com/671)
+> - [JAVA8 메소드 레퍼런스](https://imcts.github.io/java-method-reference/)
 > - [Java Study Group](https://rebeccacho.gitbooks.io/java-study-group/content/chapter14.html)
 > - [JAVA 8 스트림 튜토리얼](https://wraithkim.wordpress.com/2017/04/13/java-8-%EC%8A%A4%ED%8A%B8%EB%A6%BC-%ED%8A%9C%ED%86%A0%EB%A6%AC%EC%96%BC/)
 > - [Java8 Stream은 loop가 아니다.](https://www.popit.kr/java8-stream%EC%9D%80-loop%EA%B0%80-%EC%95%84%EB%8B%88%EB%8B%A4/)
-> - [람다가 이끌어 갈 모던 Java](https://d2.naver.com/helloworld/4911107)
 > -  [Java 8과 함수형 프로그래밍](https://medium.com/@goinhacker/java-8%EA%B3%BC-%ED%95%A8%EC%88%98%ED%98%95-%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D-154e6d8830f1)
 > - [JAVA 스트림 API](http://iloveulhj.github.io/posts/java/java-stream-api.html)
 
@@ -32,7 +32,7 @@ Java 8부터 추가된 **Stream** `API`와 **Lambda** `API`가 어떻게 쓰이�
 
 ### <a id="1"></a>Lambda 예제 코드
 `Calculator`클래스는 `calc()`라는 메소드를 가지고 있다. `calc()`는 매개변수 `n`을 받아 1을 증가시켜 리턴한다.
-
+- **Calculator.class**
 {% highlight java %}
 class Calculator {
   Calculator() {};
@@ -43,6 +43,7 @@ class Calculator {
 }
 {% endhighlight %}
 
+- **Driver**
 {% highlight java %}
 class Driver {
   public static void main(String[] args) {
@@ -152,9 +153,6 @@ class Driver {
 {% endhighlight %}
 
 #### 2. 타겟 타입
-###### [JAVA 표준 함수적 인터페이스 API]
-![Screenshot](http://oracle.moazine.com/images_sabo/Oracle/39/img15_2.jpg)
-
 컴파일러는 람다식을 해석하여 자동으로 **익명구현객체**로 만든다. 이 때 람다식의 타겟 타입이 될 인터페이스는 *2개 이상의 추상 메소드를 가지면 안된다.* 그렇게 되면 컴파일러가 해당 람다식이 타겟 타입의 어떤 메소드를 구현한 것인지 알 수 없기 때문이다.
 
 `@FuntionalInterface`는 이것을 명시적으로 선언하고 강제하는 어노테이션이다. 이런식으로 선언된 인터페이스를 람다식의 **함수적 인터페이스** 라 한다.
@@ -183,7 +181,121 @@ class Driver {
 {% endhighlight %}
 
 
-#### 3. 활용예시
+#### 3. 메소드 레퍼런스
+Method Reference(참조)는 **이미 구현되어있는 메소드를 참조**해 매개변수의 정보와 리턴 타입을 알아내, 불필요한 매개변수를 제거하는 것이 목적이다.
+
+예를 들어 정수 값 두개를 받아 둘 중 큰 값을 리턴해주는 메소드를 람다식으로 표현하려한다.
+
+##### <a id="2"></a>코드 1
+{% highlight java %}
+IntBinaryOperator op = (int x, int y) -> {
+  if(x > y) return x;
+  return y;
+};
+System.out.println(op.applyAsInt(3, 7)); // 7
+{% endhighlight %}
+
+###### [JAVA 표준 함수적 인터페이스 API]
+![Screenshot](http://oracle.moazine.com/images_sabo/Oracle/39/img15_2.jpg)
+> 여러 표준 함수적 인터페이스가 있으니 직접 찾아보며 써보길 바란다.
+
+앞서 설명한 **함수적 인터페이스**를 개발자가 직접 만들어 사용할 수도 있지만, 자바에서 제공하는 표준 인터페이스들 사용해 람다식을 구현할 수 있다. [상단의 코드](#2)에 있는 `IntBinaryOperator`는 `BinaryOperator` 종류의 표준 **함수적 인터페이스** 이다.
+
+`IntBinaryOperator`는 두 개의 정수를 매개변수로 받아 정수값을 리턴해주는 추상메소드 `applyAsInt()`를 갖고있다. 람다식은 두 개의 정수를 매개변수로 받아 둘 중 큰 값을 반환해준다. 기존에 `Math` 클래스의 `max()`를 사용해도 같은 결과를 얻을 수 있다.
+
+##### 코드 2
+{% highlight java %}
+IntBinaryOperator op1 = (int x, int y) -> {return Math.max(x, y);};
+// 앞서 배운 것을 모두 적용할 경우
+IntBinaryOperator op2 = (x, y) -> Math.max(x, y);
+
+System.out.println(op2.applyAsInt(3, 7)); // 7
+{% endhighlight %}
+
+람다식은 이미 구현되어 있는 `Math.max()`를 참조하여 사용하고 있다. 이럴 때 굳이 매개변수 (x,y)를 명시적으로 표현하지 않고 사용할 수 있다.
+##### <a id="3"></a>코드 3
+{% highlight java %}
+IntBinaryOperator op = Math::max;
+
+System.out.println(op.applyAsInt(3, 7)); // 7
+{% endhighlight %}
+
+#### <**3가지 메소드 레퍼런스**>
+##### **1. 정적메소드, 인스턴스메소드 참조**
+
+[코드 3](#3)은 `max()`가 `Math` 클래스의 정적메소드이기에 정적 메소드 참조방식이 된다. 만약 인스턴스 메소드일 경우 인스턴스를 생성한 후에 `인스턴스::메소드명`으로 사용할 수 있다.
+
+##### 코드 4
+{% highlight java %}
+class MyMath {
+  public static int myMax(int x, int y) { return x > y ? x : y; }
+}
+
+class Driver {
+  public static void main(String[] args) {
+    MyMath myMath = new MyMath();
+    IntBinaryOperator op = myMath::myMax;
+
+    System.out.println(op.applyAsInt(3, 7)); // 7
+  }
+}
+{% endhighlight %}
+
+##### **2. 매개변수의 메소드 참조 방식**
+
+이번에는 매개변수로 받은 인자의 메소드를 참조하는 방식이다. `Integer` 클래스에 있는 `compareTo()`를 사용해 보겠다. `compareTo()`는 매개변수로 들어온 인자가 호출한 인자보다 값이 큰 경우 -1, 같을 경우 0, 작을 경우 1을 리턴한다.
+
+`ToIntBiFunction`은 `Function` 인터페이스 중 하나로써. 두 개의 매개변수를 받아 람다식의 로직을 사용하여 `applyAsInt()`를 사용했을 때 int 타입을 반환해주는 **함수적 인터페이스**이다.
+
+{% highlight java %}
+class Driver {
+  public static void main(String[] args) {
+    Integer x = 3;
+    Integer y = 7;
+    ToIntBiFunction<Integer, Integer> func = Integer::compareTo; // (x, y) -> x.compareTo(y);
+
+    System.out.println(func.applyAsInt(x, y)); // -1
+  }
+}
+{% endhighlight %}
+
+##### **3. 생성자 참조 방식**
+생성자 또한 일종의 메소드이기 때문에 메소드 레퍼런스로 쓸 수 있다.
+
+{% highlight java %}
+class Person {
+  private String name;
+  private Integer age;
+
+  public Person(String name) {
+    this.name = name;
+    this.age = 0;
+  }
+
+  public Person(String name, Integer age) {
+    this.name = name;
+    this.age = age;
+  }
+
+  @Override
+  public String toString() {
+    return "[" + this.name + " : " + this.age + "]";
+  }
+}
+
+class Driver {
+  public static void main(String[] args) {
+    Function<String, Person> func1 = Person::new;
+    Function<String, Integer, Person> func2 = Person::new; // 넘어오는 매개변수의 갯수로 어떤 생성자를 호출할 지 찾아줌
+
+    System.out.println(func1.apply("Dom")); // [Dom : 0]
+    System.out.println(func2.apply("Dom", 28)); // [Dom : 28]
+  }
+}
+{% endhighlight %}
+
+
+#### 4. 활용예시
 자바에서 변수의 역할을 할 수 있는 것은 **Primitive 타입(int, long, boolean, 등), Object 타입(Object를 상속받는 모든 것)이다.** 람다식을 만들 수 있는 **타겟타입**도 변수가 될 수 있으므로, 람다식과 같이 활용하면 메소드도 매개변수처럼 사용할 수 있다.(정확히는 메소드를 구현한 함수적 인터페이스를 변수로 사용하는 것)
 
 [예제](#1)의 조건을 살짝 변형시켜보자.
@@ -227,10 +339,9 @@ class Driver {
   }
 }
 {% endhighlight %}
-
 ---
 
-### <a id="2"></a>Stream 예제
+### <a id="4"></a>Stream 예제
 String 타입의 값을 Integer로 변환하기 위해서는 ```Integer.parseInt()``` 메소드를 사용해야 한다. 하단의 예제의 최종 결과값은 문자열 List에 있는 값을 더한 것이다. 때문에 List의 String값을 Integer 값으로 모두 변환하여 더해주어야한다.
 
 **Parser** class의 ```strToIntList()```메소드는 `for loop`를 돌며 ```parseInt()```를 해주고 변환된 값들을 다시 ```List<Integer>```에 담아 반환해 주는 역할을 한다.
@@ -271,5 +382,7 @@ class Parser {
 {% endhighlight %}
 
 ## Stream
+
+
 
 ---
