@@ -10,7 +10,7 @@ tag:
 - Lambda
 category: blog
 author: sehunkim
-description: Java 8부터 추가 된 Stream이란?
+description: Java 8부터 추가 된 Stream과 Lambda에 대해 알아보자.
 star: false # true로할 경우 제목에 highlight 처리가 됨
 sitemap :
   changefreq : daily
@@ -93,7 +93,7 @@ class Driver {
 }
 {% endhighlight %}
 
-#### 1. 람다의 기본식
+### 1. 람다의 기본식
 람다식에서 생성되는 *'익명구현객체는 기반이 되는 interface의 타입을 갖는다.'* 이것을 **타겟타입**이라 한다. 우리가 람다식으로 바꿀 메소드는 `calc()`이므로 람다식의 타겟타입은 `Calculator`이다.
 
 ##### Calculator의 calc()를 람다의 기본식으로 구현
@@ -148,7 +148,7 @@ class Driver {
 }
 {% endhighlight %}
 
-#### 2. 타겟 타입
+### 2. 타겟 타입
 컴파일러는 람다식을 해석하여 자동으로 **익명구현객체**로 만든다. 이 때 람다식의 타겟 타입이 될 인터페이스는 *2개 이상의 추상 메소드를 가지면 안된다.* 그렇게 되면 컴파일러가 해당 람다식이 타겟 타입의 어떤 메소드를 구현한 것인지 알 수 없기 때문이다.
 
 `@FuntionalInterface`는 이것을 명시적으로 선언하고 강제하는 어노테이션이다. 이런식으로 선언된 인터페이스를 람다식의 **함수적 인터페이스** 라 한다.
@@ -177,7 +177,7 @@ class Driver {
 {% endhighlight %}
 
 
-#### 3. 메소드 레퍼런스
+### 3. 메소드 레퍼런스
 Method Reference(참조)는 **이미 구현되어있는 메소드를 참조**해 매개변수의 정보와 리턴 타입을 알아내, 불필요한 매개변수를 제거하는 것이 목적이다.
 
 예를 들어 정수 값 두개를 받아 둘 중 큰 값을 리턴해주는 메소드를 람다식으로 표현하려한다.
@@ -191,7 +191,7 @@ IntBinaryOperator op = (int x, int y) -> {
 System.out.println(op.applyAsInt(3, 7)); // 7
 {% endhighlight %}
 
-###### [JAVA 표준 함수적 인터페이스 API]
+###### <a id="6"></a>[JAVA 표준 함수적 인터페이스 API]
 ![Screenshot](http://oracle.moazine.com/images_sabo/Oracle/39/img15_2.jpg)
 > 여러 표준 함수적 인터페이스가 있으니 직접 찾아보며 써보길 바란다.
 
@@ -216,8 +216,8 @@ IntBinaryOperator op = Math::max;
 System.out.println(op.applyAsInt(3, 7)); // 7
 {% endhighlight %}
 
-**3가지 메소드 레퍼런스**
---
+#### 3가지 메소드 레퍼런스
+
 ##### **1. 정적메소드, 인스턴스메소드 참조**
 
 [코드 3](#3)의 `max()`가 `Math` 클래스의 정적메소드이기에 정적(static)메소드 참조방식이 된다. 만약 인스턴스 메소드일 경우 인스턴스를 생성한 후에 `인스턴스::메소드명`으로 사용할 수 있다.
@@ -294,7 +294,7 @@ class Driver {
 {% endhighlight %}
 
 
-#### 4. 활용예시
+### 4. 활용예시
 자바에서 변수의 역할을 할 수 있는 것은 **Primitive 타입(int, long, boolean, 등), Object 타입(Object를 상속받는 모든 것)이다.** 람다식을 만들 수 있는 **타겟타입**도 변수가 될 수 있으므로, 람다식과 같이 활용하면 메소드도 매개변수처럼 사용할 수 있다.(정확히는 메소드를 구현한 함수적 인터페이스를 변수로 사용하는 것)
 
 [예제](#1)의 조건을 살짝 변형시켜보자.
@@ -425,9 +425,244 @@ class Driver {
 
 여기서 스트림의 첫 특징이 나온다. `forEach()`의 매개변수로 **람다식** 을 사용할 수 있다는 것이다.
 
-#### 1. 스트림의 특징
+### 1. 스트림의 특징
+스트림은 컬랙션의 반복자와 다른 특징을 몇 가지 갖는다. [예제 코드](#4)를 변경 시켜가며 설명하겠다.
+일단 반복자가 있는 부분을 스트림으로 바꾸어보자.
+
+<a id="5"></a>
+- **Driver**
+{% highlight java %}
+class Driver {
+    public static void main(String[] args) {
+        // 문자열 List
+        List<String> strList = Arrays.asList("1,2,3,4,5,6".split(","));
+        // 문자열 List를 Integer List로 변환
+        List<Integer> intList = Parser.strToIntList(strList);
+
+        // 총 합
+        int sum = intList.stream().mapToInt(Integer::intValue).sum();
+        System.out.println(sum); // 21
+    }
+}
+{% endhighlight %}
 
 
+- **Parser**
+{% highlight java %}
+class Parser {
+    public static List<Integer> strToIntList(List<String> strList) {
+        return strList.stream()
+                .map(Integer::parseInt)
+                .collect(Collectors.toList());
+    }
+}
+
+{% endhighlight %}
+
+#### 람다식을 사용할 수 있다.
+`Stream` 객체의 메소드들은 모두 람다식을 매개변수로 가질 수 있다. 람다식에서 배웠던 [**표준 함수적 인터페이스**](#6)가 모두 포함된다. Stream의 메소드마다 각기 다른 함수적 인터페이스를 쓸 수 있으니 찾아서 적용해 보자.
+
+이제 반복자를 모두 스트림으로 변경한 [코드](#5)를 보자
+
+{% highlight java %}
+strList.stream().map(Integer::parseInt).collect(Collectors.toList());
+{% endhighlight %}
+문자열 `List`를 정수형 `List`로 변환해주는 `strToIntList()`의 메소드가 한 줄로 줄었다.
+
+1. 컬랙션은 `.stream()`를 사용하여 `Stream`타입의 객체로 바꿔줄 수 있다.
+2. `map()`은 `Function<T, R>` 함수적 인터페이스(람다식)를 매개변수로 받아 `Stream`의 데이터를 하나씩 람다식으로 처리해서 다시 `Stream`객체에 담는다.
+3. `collect()`는 스트림의 데이터를 모아 새로운 객체를 만들어 리턴한다. 상단의 코드에선 `Collectors.toList()`를 사용해서 `List` 객체를 만들어 리턴한다.
+
+![Screenshot](https://t1.daumcdn.net/cfile/tistory/2462BC3658DC5B7603)
+`Stream`은 객체 스트림(`Stream<T>`) 이 외에도 기본타입에 특화된 `IntStream`, `LongStream`, `DoubleStream` 등과 같은 **기본타입스트림** 라이브러리를 갖고있다.
+
+{% highlight java %}
+int sum = intList.stream().mapToInt(Integer::intValue).sum();
+{% endhighlight %}
+
+우린 `intList`에 있는 값의 총 합을 얻고 싶다. `IntStream`에 스트림의 모든 값을 더 해주는 `sum()`가 있기 때문에 `intList`를 `IntStream`로 바꾸어 사용해야한다.
+
+1. `IntStream.of()`로 직접 생성과 초기화하여 `IntStream`을 만드는 방법도 있지만, `mapToInt()`로 기본 스트림을 `IntStream`으로 바꿔줄 수 있다.
+> Stream.of("1","2","3","4","5","6").stream.`mapToInt(Integer::parseInt)`.sum(); 방식으로 String 스트림을 IntStream으로 바꿀 수 있다.`
+
+2. **단말연산** `sum()`으로 `IntStream`의 모든 데이터를 더한 값을 얻는다.
+
+#### 중간/단말연산을 갖고있다.
+코드를 다시 리팩토링하면 한 줄로 바꿀 수 있다.
+- **Driver**
+{% highlight java %}
+class Driver {
+    public static void main(String[] args) {
+        // 문자열 List
+        List<String> strList = Arrays.asList("1,2,3,4,5,6".split(","));
+
+        // 총 합
+        int sum = strList.stream().mapToInt(Integer::parseInt).sum();
+        System.out.println(sum); // 21
+    }
+}
+{% endhighlight %}
+
+스트림은 계속 스트림을 반환하며 연산을 이어서 할 수있게 하는 **중간연산**과 스트림을 종료시키고 결과를 반환하는 **단말연산** , 두 가지 종류의 메소드들을 갖고있다.
+
+- **중간연산**
+
+![Screenshot]({{ site.url }}/assets/images/stream_1.jpg)
+중간연산자들은 `Stream`객체를 다시 가공해서 `Stream` 객체로 만드는 연산을 한다.
+{% highlight java %}
+List<String> strList = Arrays.asList("3", "1", "4", "2", "5", "5");
+
+strList.stream() // 문자열 스트림 생성
+  .map(Integer::parseInt) // 문자열 스트림을 정수형 스트림으로 변환
+  .sorted() // 정렬
+  .distinct() // 중복제거
+  .limit(3) // 갯수를 3개로 제한
+  .collect(Collectors.toList()); // 리스트로 변환 => {1, 2, 3}
+{% endhighlight %}
+중간 연산자들은 연속해서 사용할 수 있고, 중간연산 이후엔 다른 스트림이 반환 된다.  원본인 `strList` **Collection의 값들은 바뀌지 않는다.**
+
+- **단말연산**
+
+![Screenshot]({{ site.url }}/assets/images/stream_2.jpg)
+단말연산자는 스트림을 받아 결과값을 만들고 더 이상 스트림을 반환하지 않는다.(스트림을 닫는다) 만약 연산을 계속 이어하고 싶다면 스트림을 다시 만들어 작업을 이어가야 한다.
+
+{% highlight java %}
+Stream.of("3", "1", "4", "2", "5", "5") // 문자열 스트림 생성
+        .map(Integer::parseInt) // 문자열 스트림을 정수형 스트림으로 변환
+        .sorted() // 정렬
+        .distinct() // 중복제거
+        .limit(3) // 갯수를 3개로 제한
+        .collect(Collectors.toList()) // 리스트로 변환 => {1, 2, 3}
+        .stream() // 다시 정수형 값을 갖는 스트림으로 변환
+        .filter(x -> x > 1) // 1보다 큰 값만 갖도록 필터링함 {2, 3}
+        .forEach(System.out::println); // 2와 3만 출력됨
+{% endhighlight %}
+
+- **연산의 순서**
+
+스트림은 **지연된(lazy)** 연산을 한다. 단말연산이 없으면 연산을 실행하지 않고, 단말연산이 수행되기 전에 중간연산이 실행되지 않는다.
+> 결과가 필요하기 전까지 실행되지 않는다는 뜻이다.
+
+{% highlight java %}
+Stream.of("3", "1", "4", "2", "5", "5")
+        .map(x -> {
+            System.out.println("map : " + x);
+            return Integer.parseInt(x);
+        })
+        .filter(x -> {
+            System.out.println("filter : " + x);
+            return x > 1;
+        });
+{% endhighlight %}
+이 코드를 실행하면 **단말연산**이 없기 때문에 아무 것도 출력되지 않는다.
+
+{% highlight java %}
+Stream.of("3", "1", "4", "2", "5", "5")
+        .map(x -> {
+            System.out.println("map : " + x);
+            return Integer.parseInt(x);
+        })
+        .filter(x -> {
+            System.out.println("filter : " + x);
+            return x > 1;
+        })
+        .forEach(x -> {
+            System.out.println("forEach : " + x);
+        });
+{% endhighlight %}
+이 코드를 실행하면 예상한 결과와 달라 놀라울 것이다. 우리는 보통 스트림이 해당 연산을 처리한 후에 전체 스트림을 넘겨 다시 작업할 것이라 생각한다.
+> map에서 전부 출력하고, filter에서 전부출력하고, forEach에서 filter에서 걸러진 나머지 값들을 출력할 거라고 생각할 것이다.
+
+```
+map : 3
+filter : 3
+forEach : 3
+map : 1
+filter : 1
+map : 4
+filter : 4
+forEach : 4
+map : 2
+filter : 2
+forEach : 2
+map : 5
+filter : 5
+forEach : 5
+map : 5
+filter : 5
+forEach : 5
+```
+하지만 스트림의 요소들이 개별적으로 **중간연산**들을 통과해서 **단말연산**에 도달하는 순으로 진행이 된다. 때문에 연산의 순서를 바꿈으로 연산이 실행되는 횟수를 줄일 수 있을 것이다.
+
+### 2. 병렬처리
+스트림은 `parallel()`을 활용해 연산을 병렬로 처리할 수 있다.
+
+{% highlight java %}
+Stream.of("1", "2", "3", "4", "5", "5")
+        .filter(x -> {
+            System.out.println("filter : " + x);
+            return !x.equals("5");
+        })
+        .mapToInt(x -> {
+            System.out.println("map : " + x);
+            return Integer.parseInt(x);
+        })
+        .forEach(x -> {
+            System.out.println("forEach : " + x);
+        });
+{% endhighlight %}
+상단의 코드를 실행하면 결과값은 앞서 배운 연산순서대로 각 인자가 순서대로 연산들을 통과한다.
+```
+filter : 1
+map : 1
+forEach : 1
+filter : 2
+map : 2
+forEach : 2
+filter : 3
+map : 3
+forEach : 3
+filter : 4
+map : 4
+forEach : 4
+filter : 5
+filter : 5
+```
+
+{% highlight java %}
+Stream.of("1", "2", "3", "4", "5", "5")
+        .parallel() // 병렬스트림으로 변경
+        .filter(x -> {
+            System.out.println("filter : " + x);
+            return !x.equals("5");
+        })
+        .mapToInt(x -> {
+            System.out.println("map : " + x);
+            return Integer.parseInt(x);
+        })
+        .forEach(x -> {
+            System.out.println("forEach : " + x);
+        });
+{% endhighlight %}
+
+`parallel()`로 스트림을 병렬스트림으로 바꾼 뒤 연산들을 수행하면 연산은 순서없이 병렬로 처리된다.
+```
+filter : 2
+map : 2
+forEach : 2
+filter : 5
+filter : 5
+filter : 4
+filter : 1
+map : 1
+filter : 3
+map : 3
+forEach : 1
+map : 4
+forEach : 3
+forEach : 4
+```
+스트림안에 데이터가 매우 많을 때, 병렬스트림과 연산의 순서를 활용하여 더 빠르게 연산할 수 있을 것이다.
 
 
 ---
@@ -436,6 +671,7 @@ class Driver {
 > - [JAVA8 메소드 레퍼런스](https://imcts.github.io/java-method-reference/)
 > - [Java Study Group](https://rebeccacho.gitbooks.io/java-study-group/content/chapter14.html)
 > - [JAVA 8 스트림 튜토리얼](https://wraithkim.wordpress.com/2017/04/13/java-8-%EC%8A%A4%ED%8A%B8%EB%A6%BC-%ED%8A%9C%ED%86%A0%EB%A6%AC%EC%96%BC/)
+> - [스트림 연산자정리](http://demoversion.tistory.com/27)
 > - [Java8 Stream은 loop가 아니다.](https://www.popit.kr/java8-stream%EC%9D%80-loop%EA%B0%80-%EC%95%84%EB%8B%88%EB%8B%A4/)
 > -  [Java 8과 함수형 프로그래밍](https://medium.com/@goinhacker/java-8%EA%B3%BC-%ED%95%A8%EC%88%98%ED%98%95-%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D-154e6d8830f1)
 > - [JAVA 스트림 API](http://iloveulhj.github.io/posts/java/java-stream-api.html)
