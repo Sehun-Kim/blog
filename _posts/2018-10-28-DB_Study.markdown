@@ -16,6 +16,8 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
+# *주의*
+<span class="evidence">비정기적으로 수정하는 문서</span>
 
 ## Summary:
 mySql을 공부하며 알게되는 것들 무작위 정리.

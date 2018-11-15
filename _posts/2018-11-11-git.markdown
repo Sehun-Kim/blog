@@ -1,0 +1,75 @@
+---
+title: "스마트하게 git을 써보자!"
+layout: post
+date: 2018-11-11
+image:
+headerImage: false
+tag:
+- git
+- github
+category: blog
+author: sehunkim
+description: git에 대해 알아보자.
+star: false # true로할 경우 제목에 highlight 처리가 됨
+sitemap :
+  changefreq : daily
+  priority : 1.0
+---
+
+# *주의*
+<span class="evidence">비정기적으로 수정하는 문서</span>
+
+## Description:
+2년 가까이 git을 쓰면서 `clone`, `add`, `commit`, `push` 명령어 4가지만 써왔다.. 이제 다른 것도 좀 써보자!
+
+## git 사용시 주의사항
+- 코드를 남기려고 주석을 달지 말자.
+- 커밋 메시지를 잘 쓰자.
+- 한가지 구현이 완료될 때마다 커밋을 하자. (자주 하자)
+
+### branch
+
+- 브랜치 생성
+{% highlight bash %}
+$ git branch <branch_name> # HEAD branch는 그대로
+$ git checkout -b <branch_name> # HEAD branch가 만든 브랜치로 변경
+{% endhighlight %}
+
+- git은 한번에 한 branch에서만 작업이 가능하다. 현재 작업중인 브랜치를 `HEAD`라고 한다.
+
+- 현재 작업중인 `HEAD` `branch`확인
+{% highlight bash %}
+$ git branch
+{% endhighlight %}
+
+- 모든 `branch`확인
+{% highlight bash %}
+$ git branch -a
+{% endhighlight %}
+
+- `HEAD branch` 변경
+{% highlight bash %}
+$ git checkout <branch_name>
+{% endhighlight %}
+
+### merge
+- 병합
+{% highlight bash %}
+$ git merge <branch_name>
+{% endhighlight %}
+
+### reset
+- 브랜치에서 커밋상태 초기화 하기
+{% highlight bash %}
+$ git reset —-hard <branch_name>
+{% endhighlight %}
+
+- 이전 커밋으로 돌아가기
+{% highlight bash %}
+$ git reset --hard
+{% endhighlight %}
+
+- 이후 `push`는 `--force`를 붙혀야함
+{% highlight bash %}
+$ push --force
+{% endhighlight %}

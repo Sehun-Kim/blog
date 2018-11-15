@@ -1,0 +1,20 @@
+---
+title: "Network 기초"
+layout: post
+date: 2018-11-22
+image:
+headerImage: false
+tag:
+- http
+- https
+category: blog
+author: sehunkim
+description: 네트워크 기초
+star: false # true로할 경우 제목에 highlight 처리가 됨
+sitemap :
+  changefreq : daily
+  priority : 1.0
+---
+
+# *주의*
+<span class="evidence">미완성인 문서</span>
