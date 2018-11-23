@@ -179,7 +179,7 @@ int result = (int) a;
 ---
 
 ## <a id="2"></a> 2. 객체지향적으로 자바 사용하기
-[스프링 입문을 위한 자바 객체지향의 원리와 이해](#http://wikibook.co.kr/java-oop-for-spring/)를 참고하여 작성
+[스프링 입문을 위한 자바 객체지향의 원리와 이해](http://wikibook.co.kr/java-oop-for-spring/)를 참고하여 작성
 
 > *"중복은 해악이다."*
 

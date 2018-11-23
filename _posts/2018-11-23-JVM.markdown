@@ -143,8 +143,8 @@ JVM의 메모리 구조는 한번에 이해하기 너무 어렵기 때문에, �
 
 ---
 ## 참고
-> - [Slipp::위키 - 자바 > Java Performance Fundamental](#https://www.slipp.net/wiki/pages/viewpage.action?pageId=19530332)
-> - [jvm이란?](#https://medium.com/@lazysoul/jvm-%EC%9D%B4%EB%9E%80-c142b01571f2)
+> - [Slipp::위키 - 자바 > Java Performance Fundamental](https://www.slipp.net/wiki/pages/viewpage.action?pageId=19530332)
+> - [jvm이란?](https://medium.com/@lazysoul/jvm-%EC%9D%B4%EB%9E%80-c142b01571f2)
 > - [D2 - JVM Internal](https://d2.naver.com/helloworld/1230)
-> - [D2 - Java Garbage Collection](#https://d2.naver.com/helloworld/1329)
-> - [스프링 입문을 위한 자바 객체지향의 원리와 이해](#http://wikibook.co.kr/java-oop-for-spring/)
+> - [D2 - Java Garbage Collection](https://d2.naver.com/helloworld/1329)
+> - [스프링 입문을 위한 자바 객체지향의 원리와 이해](http://wikibook.co.kr/java-oop-for-spring/)
