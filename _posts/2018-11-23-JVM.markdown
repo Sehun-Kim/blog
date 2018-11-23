@@ -135,11 +135,110 @@ Java GC는 객체가 garbage인지 판단하기 위해 reachability 개념을 �
 
 ---
 
-## 프로그램 실행흐름
+## 자바프로그램의 실행흐름
 
-JVM의 메모리 구조는 한번에 이해하기 너무 어렵기 때문에, 이해하기 쉽도록 추상화하여 **T 메모리 영역** 이라 지칭하겠다.
-> "스프링 입문을 위한 자바 객체지향의 원리와 이해"의 저자 김종민님이 만든 용어
+![Screenshot]({{ site.url }}/assets/images/1540358800806.png)
+JVM의 메모리 구조는 한번에 이해하기 너무 어렵기 때문에, 이해하기 쉽도록 추상화하여 **코드실행영역**(Runtime Engine을 추상화)과 **T 메모리 영역**(Runtime Data Areas를 추상화) 이라 지칭하겠다.
+> T 메모리구조는 "스프링 입문을 위한 자바 객체지향의 원리와 이해"의 저자 김종민님이 설명을 위해 추상화시킨 용어
 
+**코드 실행 영역**(Runtime Engine)은 자바 개발자들이 알 필요는 없다.(초보 기준) **데이터 저장 영역**(Runtime Data Areas)을 알아야한다.
+
+### T 메모리 구조
+![Screenshot]({{ site.url }}/assets/images/1540359673821.png)
+
+
+- ```static``` 영역 : Runtime Data Areas의 **Method Area**
+- ```stack``` 영역 : Runtime Data Areas의 **JVM Stack**
+- ```heap``` 영역 : Runtime Data Areas의 **Heap**
+
+
+#### 실행흐름
+
+```java
+public class Start4 {
+	public static void main(String[] args) {
+		int k = 5;
+		int m;
+
+		m = square(k);
+	}
+
+	private static int square(int k) {
+		int result;
+
+		k = 25;
+
+		result = k;
+
+		return result;
+	}
+}
+```
+
+1. JRE가 자바프로그램을 실행시킬 때 맨처음으로 main()를 찾는다.
+2. 있으면 ```Class Loader```가 목적파일(.class)을 실행시킴
+3. ```static 영역```에 java.lang 패키지, import한 패키지들을 위치시킨다. 프로그램에 있는 모든 ```클래스```와 ```필드``` ,```메소드```가 올라감
+4. ```stack```영역에 `main()`의 ```Stack Frame```이 위치하고 변수 영역에 인자를 위치시킨다.
+   - 지역변수의 경우 선언이 아닌 초기화 될 때 위치된다.
+   - 클래스 선언 {}을 제외하고 메소드의 {}, if의 {}이 생길때 마다 ```Stack Frame```이 생긴다.
+5. 메소드를 실행
+6. "}"괄호를 만나게 되면 ```Stack Frame```이 사라진다.
+7. JRE는 JVM을 종료시키고 위치했던 메모리들이 모두 없어진다.
+
+![Screenshot]({{ site.url }}/assets/images/1540364501567.png)
+
+> 두 개의 Stack Frame 사이는 서로 접근할 수 없다.
+> 단 스택프레임안에 내부에 스택프레임이 생성된다면 내부에서 외부 스택프레임으로 접근할 수 있다.(메소드 안에 또 if 블록이 있을 경우)
+
+**tip** : 멤버변수는 초기화 해주는데 왜 지역변수는 초기화 해주지 않을까? 멤버변수는 어디서 먼저 쓸지 모르고 지역변수는 해당지역에서 쓰기때문에 거기서 초기화해서 쓰라는 것이다.
+
+#### 메모리상 변수의 위치
+```java
+public Tester {
+  static int classInt = 10;
+  int instanceInt;
+
+  Tester() {
+    this.instanceInt = 20;
+  }
+
+  int getLocalInt() {
+    int localInt = 30;
+    return localInt;
+  }
+}
+
+public Main {
+  public static void main(String[] args) {
+    Tester newTester = Tester();
+
+    System.out.println(Tester.classInt); // 10
+    System.out.println(newTester.instanceInt); // 20
+    System.out.println(newTester.getLocalInt()); // 30
+  }
+}
+```
+
+- 로컬 변수(localInt)는 ```stack 영역```(JVM Stack)에 위치한다. 그리고 ```Stack Frame```이 사라지면 함께 사라진다.
+- 클래스 변수(classInt)는 ```static 영역```(Method Area)에 위치한다. 그리 JVM이 종료될 때 사라진다. (혹 JVM에 따라 GC가 알아서 처리할 수 있음)
+- 인스턴스 변수(instanceInt)는 ```heap 영역```(Heap)에 위치한다. GC가 힙 메모리 회수 시 사라진다.
+
+### 멀티 쓰레드와 멀티프로세스
+
+#### 멀티스레드
+![Screenshot]({{ site.url }}/assets/images/1540366564750.png)
+
+멀티스레드는 ```stack 영역```(Method Area)을 스레드 갯수만큼 분할
+
+- Spring Framework는 클라이언트의 요청 만큼 스레드를 만든다.
+- 공유영역(```static``` , ```heap```)에 있는 값들을 스레드별로 변경하려다 문제가 생길 수 있으니 주의해야한다.
+
+#### 멀티프로세스
+![Screenshot]({{ site.url }}/assets/images/1540366634051.png)
+
+멀티프로세스는 ```데이터 저장영역```(Runtime Data Areas)을 프로세스 갯수만큼 분할
+
+- 공유영역에 있는 값들이 변할 위험이 줄어들어 안정성은 높아지지만, 그만큼 메모리 사용량이 늘어난다.
 
 ---
 ## 참고
