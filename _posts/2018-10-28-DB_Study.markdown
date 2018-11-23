@@ -1,5 +1,5 @@
 ---
-title: "mySql Tip"
+title: "[DB] mySql Tip"
 layout: post
 date: 2018-10-28
 image:

@@ -5,6 +5,7 @@ date: 2018-12-03
 image:
 headerImage: false
 tag:
+- Java
 - Spring
 - Bean
 category: blog

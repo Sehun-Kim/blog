@@ -1,5 +1,5 @@
 ---
-title: "스마트하게 git을 써보자!"
+title: "[Git] 스마트하게 git을 써보자!"
 layout: post
 date: 2018-11-11
 image:

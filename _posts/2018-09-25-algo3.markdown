@@ -1,8 +1,8 @@
 ---
-title: "스택 수열(1874)"
+title: "[백준] 스택 수열(1874)"
 layout: post
 date: 2018-09-25
-image: 
+image:
 headerImage: false
 tag:
 - Java

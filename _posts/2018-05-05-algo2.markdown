@@ -1,8 +1,8 @@
 ---
-title: "가장 긴 팰린드롬 찾기"
+title: "[프로그래머스] 가장 긴 팰린드롬 찾기"
 layout: post
 date: 2018-05-05
-image: 
+image:
 headerImage: false
 tag:
 - Python3

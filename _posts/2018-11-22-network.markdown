@@ -1,5 +1,5 @@
 ---
-title: "Network 기초"
+title: "[Network] 기초"
 layout: post
 date: 2018-11-22
 image:
