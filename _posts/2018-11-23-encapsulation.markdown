@@ -6,11 +6,11 @@ image:
 headerImage: false
 tag:
 - Java
-- OOP의 4대 특성
+- 객체지향의 4대 특성
 - 캡슐화
 category: blog
 author: sehunkim
-description: OOP의 4대 특성 중 캡슐화에 대해 알아보자
+description: 객체지향의 4대 특성 중 캡슐화에 대해 알아보자
 star: false # true로할 경우 제목에 highlight 처리가 됨
 sitemap :
   changefreq : daily

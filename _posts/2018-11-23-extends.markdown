@@ -6,13 +6,101 @@ image:
 headerImage: false
 tag:
 - Java
-- OOP의 4대 특성
+- 객체지향의 4대 특성
 - 상속
 category: blog
 author: sehunkim
-description: OOP의 4대 특성 중 상속에 대해 알아보자
+description: 객체지향의 4대 특성 중 상속에 대해 알아보자
 star: false # true로할 경우 제목에 highlight 처리가 됨
 sitemap :
   changefreq : daily
   priority : 1.0
 ---
+
+## 상속이란?
+
+상속의 목적은 **분류**에 있다. 이를 통해 **재사용성**과 **확장성**을 얻는다.
+
+- 잘못된 상식
+
+```java
+// 딸을 낳으니 아버지 역할을 한다? (x)
+Father dauther = new Dauther();
+
+// 팽귄을 낳으니 새의 역할을 한다? (o)
+Bird penguin = new Penguin();
+```
+### 객체지향에서 상속은 계층이 아닌 확장.
+보통 상속이 `계층적`이라 착각한다. 그래서 ```Father```의 자식(하위)클래스가 ```Dauther```라 생각한다.
+하지만 딸이 아버지의 역할을 할 순 없다.
+
+반대로 Bird의 한 종류인 Penguin은 Bird의 역할을 할 수 있다.
+
+```java
+// 자식의 한 종류인 딸이 자식의 역할을 한다.
+Child dauther = new Dauther();
+```
+
+![Screenshot]({{ site.url }}/assets/images/extends1.PNG)
+- 상위클래스로 갈 수록 더 **추상화**되고 **일반화** 된다.
+- 하위클래스로 갈 수록 더 **구체화**되고 **특수화** 된다.
+- 하위클래스는 상위클래스로 쓰일 수 있다.
+
+**`하위클래스` is kind of `상위클래스`**  => 객체지향 5원칙 중 LICOV 치환 원칙
+> 키워드도 inheritance (상속)이 아닌 extends (확장)이다.
+>
+> 고래는 포유류를 상속 받는다? (x)
+>
+> 고래는 포유류를 확장한 것이다.(o)
+
+
+#### ```penguin``` 객체의 T 메모리 매핑과정
+> JVM의 메모리를 추상화한 T 메모리란 용어에 대해 알고 싶으면 [이 글]({{ site.url }}/JVM)을 읽어볼 것
+
+- **Animal**
+```java
+class Animal {
+    String name;
+
+    public void showName() {
+        System.out.println(this.name);
+    }
+}
+```
+
+- **Penguin**
+```java
+class Penguin extends Animal {
+    String habitat;
+
+    public void showHabitat() {
+        System.out.println(this.habitat);
+    }
+}
+```
+
+- **Driver**
+```java
+public class Driver {
+    public static void main(String[] args) {
+        Penguin pororo new Penguin();
+
+        pororo.name = "뽀로로";
+        pororo.habitat = "남극";
+
+        pororo.showName();
+        pororo.showHabitat();
+    }
+}
+```
+
+![Screenshot]({{ site.url }}/assets/images/extends2.PNG)
+
+```Penguin``` class로 객체를 생성하면 ```heap 영역```에 ```Penguin```객체 뿐만아니라. 상위클래스인 ```Animal``` 객체도 생성이 된다.
+- 만약  Animal pororo = new Penguin(); 이렇게 pororo를 생성한다면 pororo는 `heap`영역의 Penguin 객체가 아닌 Animal 객체를 참조하게 된다.
+
+---
+## 참고
+> - [스프링 입문을 위한 자바 객체지향의 원리와 이해](http://wikibook.co.kr/java-oop-for-spring/)
+> - [김종민님 유튜브강의](https://www.youtube.com/playlist?list=PLhDpFstysKKlKoYLivzTVcJxBlvrOb4rM)
+> - [김종민님 강의 github](https://github.com/expert0226/oopinspring)
