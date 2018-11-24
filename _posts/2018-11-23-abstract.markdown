@@ -16,3 +16,105 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
+
+## 추상화란?
+
+구체적인 것(사물)을 분해해서 **관심 영역**에 대한 **특성**만을 **재조합**한것
+
+![Screenshot]({{ site.url }}/assets/images/1540370129172.png)
+```
+구체적인 것(사물) : 사람
+
+병원의 관심영역 : 시력, 몸무게, 혈액형, 키, 먹다, 자다
+은행의 관심영역 : 나이, 직업, 연봉, 일하다, 입금하다, 출금하다
+```
+
+- 같은 사람을 추상화 하더라도 관심있는 부분에 따라 특성이 달라진다.
+
+
+### 쥐 캐릭터들이 공통적으로 갖는 것을 추상화
+Java는 ```class```라는 키워드로 객체들 중에 **공통적**으로 관심이 가는 영역을 추상화 한다.
+
+
+![Screenshot]({{ site.url }}/assets/images/1540370662740.png)
+
+쥐는 이름, 나이, 꼬리수를 갖고있으며 울수있다.
+
+- **Mouse**
+```java
+public class Mouse {
+	public String name;
+	public int age;
+	public int countOfTail;
+
+	public void sing() {
+		System.out.println(name + " 찍찍!!!");
+	}
+}
+```
+
+- **MouseDriver**
+```java
+public class MouseDriver {
+	public static void main(String[] args) {
+		Mouse mickey = new Mouse();
+
+		mickey.name = "미키";
+		mickey.age = 85;
+		mickey.countOfTail = 1;
+
+		mickey.sing(); // 미키 찍찍!!
+
+		mickey = null;
+
+		Mouse jerry = new Mouse();
+
+		jerry.name = "제리";
+		jerry.age = 73;
+		jerry.countOfTail = 1;
+
+		jerry.sing(); // 제리 찍찍!!
+	}
+}
+```
+
+#### ```mickey``` 객체의 T 메모리 매핑과정
+> JVM의 메모리를 추상화한 T 메모리란 용어에 대해 알고 싶으면 [이 글]({{ site.url }}/JVM)을 읽어볼 것
+
+![Screenshot]({{ site.url }}/assets/images/1540371196125.png)
+
+- `main()` Stack Frame의 `mickey` 변수는 ```heap 영역```의 ```Mouse```객체를 참조하고 있다.
+
+
+
+![Screenshot]({{ site.url }}/assets/images/1540371236880.png)
+- ```heap 영역```을 참조하던 변수가 null이 되면, 참조되지 않는 객체를 GC(garbage collections)가 없애줌
+```java
+mickey = null;
+```
+
+*Tip* : ```stack 영역```과 ```static 영역```은 **GC** 가 정리하는 것이 아니다. ```stack 영역```은 "}"을 만나 메소드가 끝날 때 자동으로 해제되고, ```static 영역```은 프로그램이 끝날 때 정리가 된다.
+
+![Screenshot]({{ site.url }}/assets/images/1540374936801.png)
+
+- **Mouse**
+
+```java
+public class Mouse {
+	public String name;
+	public int age;
+	public static int countOfTail = 1; // static 영역으로 변경
+
+	public void sing() {
+		System.out.println(name + " 찍찍!!!");
+	}
+}
+```
+- countOfTail은 `Mouse` class로 생성하는 모든 객체가 동일한 값(1)을 가진다. 때문에 ```static 영역```에 변수를 두면 ```heap 영역```의 중복을 피할 수 있다.
+
+
+---
+## 참고
+> - [스프링 입문을 위한 자바 객체지향의 원리와 이해](http://wikibook.co.kr/java-oop-for-spring/)
+> - [김종민님 유튜브강의](https://www.youtube.com/playlist?list=PLhDpFstysKKlKoYLivzTVcJxBlvrOb4rM)
+> - [김종민님 강의 github](https://github.com/expert0226/oopinspring)

@@ -1,5 +1,5 @@
 ---
-title: "[Java] 자바 프로그램의 실행흐름"
+title: "[Java] JVM / 자바 프로그램의 실행흐름"
 layout: post
 date: 2018-11-23
 image:
