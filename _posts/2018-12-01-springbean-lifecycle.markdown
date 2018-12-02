@@ -19,6 +19,8 @@ sitemap :
   priority : 1.0
 ---
 
+###### 실습코드 [github](https://github.com/Sehun-Kim/spring-bean-lifecycle)
+
 ## Description:
 Spring Framework을 구성하는 큰 축인 IoC/DI의 개념에 대해 알아보자. 그리고 Spring Framework의 Bean이란 무엇이고, 이 Bean의 생명주기란 무엇인지 알아보자.
 
@@ -29,7 +31,6 @@ Spring Framework을 구성하는 큰 축인 IoC/DI의 개념에 대해 알아보
 2. [IoC/DI](#2)
 3. [Spring의 Container](#3)
 4. [Spring Bean LifeCycle](#4)
-> 코드 [github](https://github.com/Sehun-Kim/spring-bean-lifecycle)
 
 <br>
 
