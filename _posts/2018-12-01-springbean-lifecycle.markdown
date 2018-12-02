@@ -1,5 +1,5 @@
 ---
-title: "[Spring] Bean Life Cycle"
+title: "[Spring] IoC/DI & Spring Bean Life Cycle"
 layout: post
 date: 2018-12-01
 image:
@@ -20,7 +20,7 @@ sitemap :
 ---
 
 ## Description:
-Spring Framework의 구성요소에 대하여 아주 약간(초큼) 알아보자. 그리고 Spring Framework의 Bean이란 무엇이고, 이 Bean의 생명주기에 대해 알아보자.
+Spring Framework을 구성하는 큰 축인 IoC/DI의 개념에 대해 알아보자. 그리고 Spring Framework의 Bean이란 무엇이고, 이 Bean의 생명주기란 무엇인지 알아보자.
 
 <!-- index-->
 >
@@ -254,20 +254,20 @@ public class Driver {
 
 ```java
 interface SoccerBall {
-  void touchBall();
+  String touchBall();
 }
 
 @Component("adidasBall") // adidasBall이란 이름을 가진 Bean으로 등록
-class AdidasSoccerBall implements SoccerBall {
-  public void touchBall() {
-    System.out.println("아디다스 축구공이 굴러간다!");
+public class AdidasSoccerBall implements SoccerBall {
+  public String touchBall() {
+      return "아디다스 축구공이 굴러간다!";
   }
 }
 
 @Component("nikeBall") // nikeBall이란 이름을 가진 Bean으로 등록
-class NikeSoccerBall implements SoccerBall {
-  public void touchBall() {
-    System.out.println("나이키 축구공이 굴러간다!");
+public class NikeSoccerBall implements SoccerBall {
+  public String touchBall() {
+      return "나이키 축구공이 굴러간다!";
   }
 }
 ```
@@ -275,16 +275,15 @@ class NikeSoccerBall implements SoccerBall {
 - SoccerPlayer
 
 ```java
-@Component // Bean으로 등록
-class SoccerPlayer {
-  @Autowired
-  @Qualifier("nikeBall")
-  private SoccerBall ball;
+@Component // 의존성을 주입받는 객체도 Bean으로 등록되어야 한다.
+public class SoccerPlayer {
+    @Autowired
+    @Qualifier("nikeBall")
+    private SoccerBall ball;
 
-  public void playSoccer() {
-    System.out.println("축구선수가 공을 찼다!");
-    this.ball.touchBall();
-  }
+    public String playSoccer() {
+        return "축구선수가 공을 찼다! \n" + this.ball.touchBall();
+    }
 }
 ```
 
@@ -298,10 +297,7 @@ public class SoccerController {
 
     @RequestMapping("/soccer")
     public String soccerDriver() {
-
-        soccerPlayer.playSoccer(); // 여기가 중요하다.
-
-        return "soccer";
+        return soccerPlayer.playSoccer();
     }
 }
 ```
@@ -351,31 +347,404 @@ Bean 객체를 생성하고 관리하는 인터페이스이다. 디자인패턴�
 ### Configuration MetaData
 > xml 설정파일을 통한 등록에 관련된 문제점을 알고싶으면 [여기로](http://joont.tistory.com/195)
 
-Container에 Bean을 등록하기 위한 설정방법은 크게 두 가지가 있다.
+Container에 Bean의 메타정보를 등록하기 위한 설정방법 두 가지
 
-1. **xml 설정파일을 통한 등록**
-2. **Java Config(.java파일과 어노테이션)을 이용한 등록**
+- **BeanA**
+
+```java
+class BeanA {
+
+}
 ```
-ex) @Bean, @Component, @Autowired, @Resource, @Controller, @Service, @Repository
-pring-Boot는 어노테이션을 통해 Bean을 설정하고 주입받는 것을 표준으로 삼는다.
+
+- **BeanB**
+
+```java
+class BeanB {
+  private BeanA beanA;
+
+  public void setBeanA(BeanA beanA) {
+    this.beanA = beanA;
+  }
+}
+```
+
+#### 1. **xml 설정파일을 통한 등록**
+한번에 의존관계를 볼 수 있다는 장점도 있지만 너무 복잡하고, 알아보기 힘들어서 요즘은 안 쓴다.
+
+- **web.xml**
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+    <bean id="beanA"  class="test.bean.BeanA"/>
+    <bean bean id="beanB" class="test.bean.BeanB">
+        <property name="beanA" ref="beanA"></property>
+    </bean>
+</beans>
+```
+
+#### 2. **Java Config(.java파일과 어노테이션)을 이용한 등록**
+요즘 가장 많이 사용하는 방법. 직관적이고 가독성이 좋다.
+
+- **WebConfig**
+
+```java
+@Configuration
+public class WebConfig {
+  @Bean(name = "beanA")
+  public BeanA beanA {
+    return new BeanA();
+  }
+
+  @Bean(name = "beanB")
+  public BeanB beanB(BeanA beanA) {
+    BeanB beanB = new BeanB();
+    beanB.setBeanA(beanA);
+    return beanB;
+  }
+}
+```
+
+**Spring-Boot는** 어노테이션을 통해 Bean을 설정하고 주입받는 것을 표준으로 삼는다.
+
+- Container에 Spring Bean으로 등록시켜주는 `Annotation`
+
+```
+ex) @Bean, @Component, @Controller, @Service, @Repository
+
+- @Bean은 개발자가 컨트롤 할 수 없는 외부 라이브러리 Bean으로 등록하고 싶은 경우
+(메소드로 return 되는 객체를 Bean으로 등록)
+
+- @Component는 개발자가 직접 컨트롤할 수 있는 클래스(직접 만든)를 Bean으로 등록하고 싶은 경우
+(선언된 Class를 Bean으로 등록)
+
+- @Controller, @Service, @Repository 등 은 @Component를 비즈니스 레이어에 따라 명칭을 달리 지정해준 것
+```
+
+- Container에 있는 Spring Bean을 찾아 주입시켜주는 `Annotation`
+
+```
+- @Recource : 이름으로 참조할 Bean을 검색하여 주입한다. (JAVA 표준)
+- @Autowired : 타입으로 참조할 Bean을 찾아 주입한다. (SPRING 표준)
 ```
 
 ---
 
 ## <a id="4"></a>4. Spring Bean LifeCycle
 
+### Spring Bean의 생명주기
+> Spring-Boot 기준 어노테이션 방식으로만 설명하겠다.
+
+#### 1. Spring Application이 시작되고 **Bean 설정파일** 초기화
+
+```java
+public BeanA() {} // 기본생성자
+```
+
+> config.java(어노테이션이 붙은 모든 것을 찾음) 혹은 web.xml을 이용하여
+> `Bean`으로 등록할 대상을 찾아 기본 생성자를 호출하여 Bean 등록
 
 
+#### 2. Bean으로 등록할 **객체 초기화**
+
+```java
+// @Component를 사용할 경우
+@PostConstruct
+public void init() {
+  System.out.println("init");
+}
+
+// @Bean을 사용할 경우
+@Bean(initMethod = "init")
+public BeanA beanA() {
+  return new BeanA();
+}
+```
+
+> Bean의 의존관계를 확인하여(@Autowired, @Resource) 다른 Bean을 주입해주고,
+> Bean 설정파일에 있는 init-method를 호출한다.
 
 
+#### 3. Bean 준비상태
+
+> 모든 Bean의 초기화가 끝나고 사용 가능한 상태
+
+#### 4. Bean 소멸상태
+
+```java
+// @Component를 사용할 경우
+@PreDestroy
+public void destroy() {
+  System.out.println("destroy");
+}
+
+// @Bean을 사용할 경우
+@Bean(destroyMethod = "destroy")
+public BeanA beanA() {
+  return new BeanA();
+}
+```
+
+> spring 프로젝트가 종료될 때 Bean 설정파일의 destroy-method가 호출된다.
+> (초기화 순서의 역순으로 실행)
+
+### 의존관계에 따른 생명주기의 변화
+
+#### 의존관계가 없는 경우
+
+- **BeanA**
+
+```java
+package spring.springbeanlifecycle.bean;
+
+public class BeanA {
+    public BeanA() {
+        System.out.println("BeanA : 생성자");
+    }
+
+    public void init() {
+        System.out.println("BeanA : init");
+    }
+
+    public void destroy() {
+        System.out.println("BeanA : destroy");
+    }
+}
+```
+
+- **BeanB**
+
+```java
+package spring.springbeanlifecycle.bean;
+
+public class BeanB {
+    public BeanB() {
+        System.out.println("BeanB : 생성자");
+    }
+
+    public void init() {
+        System.out.println("BeanB : init");
+    }
+
+    public void destroy() {
+        System.out.println("BeanB : destroy");
+    }
+}
+```
+
+- **WebConfig**
+
+```java
+package spring.springbeanlifecycle;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import spring.springbeanlifecycle.bean.BeanA;
+import spring.springbeanlifecycle.bean.BeanB;
+
+@Configuration // web.xml과 같은 역할
+public class WebConfig extends WebMvcConfigurerAdapter {
+    @Bean(name = "beanA", initMethod = "init", destroyMethod = "destroy")
+    public BeanA getBeanA() {
+        return new BeanA();
+    }
+
+    @Bean(name = "beanB", initMethod = "init", destroyMethod = "destroy")
+    public BeanB getBeanB() {
+        return new BeanB();
+    }
+}
+```
+
+- **ComponentA**
+
+```java
+package spring.springbeanlifecycle.component;
+
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
+@Component
+public class ComponentA {
+    public ComponentA() {
+        System.out.println("ComponentA : 생성자");
+    }
+
+    @PostConstruct
+    public void init() {
+        System.out.println("ComponentA : init");
+    }
+
+    @PreDestroy
+    public void destroy() {
+        System.out.println("ComponentA : destroy");
+    }
+}
+```
+
+- **ComponentB**
+
+```java
+package spring.springbeanlifecycle.component;
+
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
+@Component
+public class ComponentB {
+    public ComponentB() {
+        System.out.println("ComponentB : 생성자");
+    }
+
+    @PostConstruct
+    public void init() {
+        System.out.println("ComponentB : init");
+    }
+
+    @PreDestroy
+    public void destroy() {
+        System.out.println("ComponentB : destroy");
+    }
+}
+```
+
+- **DiController**
+
+```java
+package spring.springbeanlifecycle.controller;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
+@RestController
+public class DiController {
+
+    public DiController() {
+        System.out.println("DiController : 생성자");
+    }
+
+    @PostConstruct
+    public void init() {
+        System.out.println("DiController : init");
+    }
+
+    @RequestMapping("/")
+    public String index() {
+        return "hello world";
+    }
+
+    @PreDestroy
+    public void destroy() {
+        System.out.println("DiController : destroy");
+    }
+}
+```
+
+##### Spring Project 실행
+![Screenshot]({{ site.url }}/assets/images/nonedistart.png)
+
+각 Bean 객체들이 초기화 될 때. 생성자, init() 순으로 진행된다.
+
+##### Spring Project 종료
+![Screenshot]({{ site.url }}/assets/images/nonediquit.png)
+
+각 Bean 객체들이 초기화 된 순서의 역순으로 destroy()된다.
+
+#### 의존관계가 있는 경우
+상단의 `DiController`에 다른 `Bean`들과 의존관계를 설정해 보았다.
+
+- **DiController**
+
+```java
+package spring.springbeanlifecycle.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import spring.springbeanlifecycle.bean.BeanA;
+import spring.springbeanlifecycle.bean.BeanB;
+import spring.springbeanlifecycle.component.ComponentA;
+import spring.springbeanlifecycle.component.ComponentB;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
+@RestController
+public class DiController {
+
+    @Autowired
+    private BeanA beanA;
+
+    @Autowired
+    private BeanB beanB;
+
+    @Autowired
+    private ComponentA componentA;
+
+    @Autowired
+    private ComponentB componentB;
+
+    public DiController() {
+        System.out.println("DiController : 생성자");
+    }
+
+    @PostConstruct
+    public void init() {
+        System.out.println("DiController : init");
+    }
+
+    @RequestMapping("/")
+    public String index() {
+        return "hello world";
+    }
+
+    @PreDestroy
+    public void destroy() {
+        System.out.println("DiController : destroy");
+    }
+}
+```
+
+##### Spring Project 실행
+![Screenshot]({{ site.url }}/assets/images/distart.png)
+
+각 Bean 객체들이 순서대로 생성, 초기화 되다가, 의존하고 있는 `Bean`을 가진 `Bean`이 초기화 될 때, 의존하는 `Bean`이 없는 경우 먼저 해당 `Bean`을 생성,초기화 해준다.
+
+##### Spring Project 종료
+![Screenshot]({{ site.url }}/assets/images/diquit.png)
+
+각 Bean 객체들이 초기화 된 순서의 역순으로 destroy()된다.
 
 
+### Spring Bean의 Scope
+> 자세한 내용은 [여기](http://isstory83.tistory.com/92)로
 
+`Bean`은 기본적으로 등록된 `Container`에 1개의 인스턴스만 존재한다. 이 것을 **Singleton** Scope라고 한다.
+이 것 말고도 다양한 Scope를 지정해서 사용할 수 있다.
 
+- **singleton** : 기본(Default) 싱글톤 스코프. 하나의 Bean 정의에 대해서 Container 내에 단 하나의 객체만 존재한다.
+- **prototype** : 어플리케이션에서 요청시 (getBean()) 마다 스프링이 새 인스턴스를 생성
+- **request** : HTTP 요청별로 인스턴스화 되며 요청이 끝나면 소멸 (spring mvc webapplication 용도)
+- **session** : HTTP 세션별로 인스턴스화되며 세션이 끝나며 소멸 (spring mvc webapplication 용도)
+- **global session** : 포틀릿(portlet) 기반의 웹 어플리케이션 용도. 전역 세션 스코프의 빈은 같은 스프링 MVC를 사용한 포탈 어플리케이션 내의 모든 포틀릿 컨텍스트 사이에서 공유할 수 있다
+- **application** : 새 스레드에서 요청하면 새로운 bean 인스턴스를 생성, 같은 스레드에 대해서는 항상 같은 bean 인스턴스가 반환된다.
 
+#### 사용법
+**Annotation 방식**
 
-
-
+```java
+@Bean
+@Scope("prototype") // Bean 등록 어노테이션 밑에 @Scope 어노테이션을 추가해준다.
+```
 
 
 ---
@@ -390,3 +759,4 @@ pring-Boot는 어노테이션을 통해 Bean을 설정하고 주입받는 것을
 > - [10차 SLiPP 스터디](https://www.slipp.net/wiki/pages/viewpage.action?pageId=25527606)
 > - [IoC란?](https://jongmin92.github.io/2018/02/11/Spring/spring-ioc-di/)
 > - [스프링의 기술](https://12bme.tistory.com/158)
+> - [Spring - Bean Scope](http://isstory83.tistory.com/92)
