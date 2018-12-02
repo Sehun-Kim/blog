@@ -19,7 +19,7 @@ sitemap :
   priority : 1.0
 ---
 
-###### 실습코드 [github](https://github.com/Sehun-Kim/spring-bean-lifecycle)
+### 실습코드 {[github](https://github.com/Sehun-Kim/spring-bean-lifecycle)}
 
 ## Description:
 Spring Framework을 구성하는 큰 축인 IoC/DI의 개념에 대해 알아보자. 그리고 Spring Framework의 Bean이란 무엇이고, 이 Bean의 생명주기란 무엇인지 알아보자.
@@ -39,7 +39,7 @@ Spring Framework을 구성하는 큰 축인 IoC/DI의 개념에 대해 알아보
 ## <a id="1"></a>1. Java Bean vs Spring Bean
 
 ### Java Bean
-Java를 공부하다 보면 ```Java Bean```이라는말을 종종들었을 것이다.
+Java를 공부하다 ```Java Bean```이라는 단어를 종종 보았을 것이다.
 
 **Java Bean** 은 데이터를 표현하는 것을 목적으로 하는 자바 클래스이다. 특별한 것은 없고 **Java Bean 규약** 에 맞춰서 만든 클래스를 뜻한다.
 
@@ -52,13 +52,13 @@ Java를 공부하다 보면 ```Java Bean```이라는말을 종종들었을 것�
 5. Serializable(직렬화)가 가능해야한다.
 ```
 #### 직렬화
-**직렬화** 란 시스템 내부에서 사용하는 객체 혹은 데이터를 외부의 시스템에서도 사용할 수 있도록 변환시키는 것을 말한다. 자바는 JVM의 Heap 영역에 상주한 객체를 byte형태로 변환시키거나, byte 형태를 다시 객체로 변환하는 것(역직렬화)을 말한다.
-> CSV, JSON format으로 객체를 변경시키는 것도 직렬화하는 것이라고 볼 수 있다.
+**직렬화** 란 시스템 내부에서 사용하는 객체 혹은 데이터를 외부의 시스템에서도 사용할 수 있도록 변환시키는 것을 말한다. 자바에서는 JVM의 Heap 영역에 상주한 객체를 byte형태로 변환시키거나(직렬화), byte 형태를 다시 자바 객체로 변환하는 것(역직렬화)을 말한다.
+> CSV, JSON format으로 자바 객체를 변경시키는 것도 직렬화하는 것이라고 볼 수 있다.
 
-Java는 ```Serializable``` interface를 implements한 클래스는 직렬화 할 수 있다.
+`Serializable` interface를 implements한 클래스는 직렬화 할 수 있다.
 
 #### Java Bean 규약 예시
-- Person
+- **Person**
 
 ```java
 import java.io.Serializable;
@@ -107,13 +107,14 @@ public class Person implements Serializable {
     }
 }
 ```
-Spring은 뷰 영역(JSP, 혹은 다른 템플릿 엔진)에 데이터를 출력하고 싶을 때 ```Java Bean 규약```에 맞춰 만들어진 객체를 사용하고, 또한 이 객체들을 외부 저장소에 저장하고 전송할 때 사용한다.
+**Spring은** 뷰 영역(JSP, 혹은 다른 템플릿 엔진)에 데이터를 출력하고 싶을 때 ***Java Bean 규약***에 맞춰 만들어진 객체를 사용하고, 객체들을 외부 저장소에 저장하고 전송할 때 사용한다.
 
 ### Spring Bean
-**Spring Bean** 은 `Spring Framework`의 `Container`에 의해 등록, 생성, 조회, 관계설정이 되는 객체이다. 일반 **Java Object**와 동일하지만 **IoC** 방식으로 관리되는 오브젝트를 뜻한다.
-> `Spring Bean`은 `Java Bean`과는 달리 별다른 생성 규칙은 없다.
+**Spring Bean**은 `Spring Framework`의 `Container`에 의해 등록, 생성, 조회, 관계설정이 되는 객체이다. 일반 **Java Object**와 동일하지만 **IoC** 방식으로 관리되는 오브젝트를 뜻한다.
 
-어려운 용어가 갑자기 늘어났다. 아래의 [IoC/DI](#2)와 [Container](#3)에 대해 공부하고 `Spring Bean`에 대해 알아보자
+`Spring Bean`은 `Java Bean`과는 달리 별다른 생성 규칙은 없다.
+
+> 어려운 용어가 갑자기 늘어났다. 아래의 [IoC/DI](#2)와 [Container](#3)에 대해 공부하고 `Spring Bean`에 대해 알아보자
 
 ---
 
@@ -131,9 +132,10 @@ Spring은 뷰 영역(JSP, 혹은 다른 템플릿 엔진)에 데이터를 출력
 **Inversion Of Control / Dependency Injection**
 
 IoC와 DI를 한글로 번역하면 *제어 역전의 원칙*과 *의존성 주입*이다. 더욱 쉽게 말하면 **대신해준다(IoC)**와 **대신넣어준다(DI)** 는 뜻이다.
-이 때 Spring에서 대신해주는 것은 미리 찜해놓은 객체의 생성과 소멸이다.
+이 때 Spring에서 대신해주는 것은 미리 찜해놓은 객체를 생성하고 관계를 설정시켜주고 소멸시키는 것이다.
 
-일반적으로 프로그램을 짤 때 필요한 객체를 만들고, 만들어진 객체의 메소드를 직접 호출해서 사용한다. 여기서 각 객체는 프로그램의 흐름에 능동적으로 참여한다. 이때 모든 작업은 사용하는 쪽에서 제어한다.
+#### 일반적인 의존관계
+보통 프로그램의 실행흐름에 따른다면, 무언가 필요한 쪽에서 필요한 객체를 만들고, 만들어진 객체의 메소드를 직접 호출해서 사용한다. 여기서 각 객체는 프로그램의 흐름에 능동적으로 참여하게된다. 이 때 모든 작업은 사용하는 쪽에서 제어한다.
 
 - SoccerPlayer
 
@@ -315,12 +317,12 @@ public class SoccerController {
 ---
 
 ## <a id="3"></a>3. Container
-앞서 **Spring Bean** 이 스프링 컨테이너가 생성과 관계를 설정하는 객체란 것을 배웠다. 그럼 이런 역할을 해주는 **Container**는 무엇인가?
+앞서 `Spring Bean`이 ***스프링 컨테이너에*** 의해 관리되는 객체란 것을 배웠다. 그럼 이런 역할을 해주는 **Container**는 무엇인가?
 
 ![Screenshot](http://docs.spring.io/autorepo/docs/spring/2.0.8/reference/images/container-magic.png)
+> 여러가지 이름으로 불린다. Spring Container, DI Container, IoC Container, Bean Container 등.
 
 **스프링의 컨테이너는 프로그래머가 작성한 코드의 처리과정을 위임받아 독립적으로 처리하는 존재이다.** 컨테이너의 사전적 의미는 무언가를 담는 용기, 즉 그릇을 의미한다. 이를 통해 접급하자면 컨테이너는 객체관리를 주로 수행하는 그릇정도로 이해할 수 있다.
-> 여러가지 이름으로 불린다. Spring Container, DI Container, IoC Container, Bean Container 등.
 
 
 ### 사용하는 이유
@@ -378,8 +380,8 @@ class BeanB {
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans>
-    <bean id="beanA"  class="test.bean.BeanA"/>
-    <bean bean id="beanB" class="test.bean.BeanB">
+    <bean id="beanA" class="test.bean.BeanA"/>
+    <bean id="beanB" class="test.bean.BeanB">
         <property name="beanA" ref="beanA"></property>
     </bean>
 </beans>
@@ -435,7 +437,7 @@ ex) @Bean, @Component, @Controller, @Service, @Repository
 ## <a id="4"></a>4. Spring Bean LifeCycle
 
 ### Spring Bean의 생명주기
-> Spring-Boot 기준 어노테이션 방식으로만 설명하겠다.
+Spring-Boot 기준 어노테이션 방식
 
 #### 1. Spring Application이 시작되고 **Bean 설정파일** 초기화
 
