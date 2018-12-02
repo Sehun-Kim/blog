@@ -29,6 +29,7 @@ Spring Framework을 구성하는 큰 축인 IoC/DI의 개념에 대해 알아보
 2. [IoC/DI](#2)
 3. [Spring의 Container](#3)
 4. [Spring Bean LifeCycle](#4)
+> 코드 [github](https://github.com/Sehun-Kim/spring-bean-lifecycle)
 
 <br>
 
@@ -118,11 +119,10 @@ Spring은 뷰 영역(JSP, 혹은 다른 템플릿 엔진)에 데이터를 출력
 ## <a id="2"></a>2. IoC/DI
 
 #### Spring 삼각형
-> "스프링이란 **IoC**와 **AOP**를 지원하는 경량의 **컨테이너** 프레임워크이다."
+**스프링의 기반이 되는 설계 개념을 표현한 것**
 
 ![Screenshot](http://www.springframework.net/doc-latest/reference/html/images/spring-triangle.png)
-
-**스프링의 기반이 되는 설계 개념을 표현한 것**
+> "스프링이란 **IoC**와 **AOP**를 지원하는 경량의 **컨테이너** 프레임워크이다."
 
 너무나 방대한 내용이기에 `Container`를 설명하기 위해 필요한 **IoC/DI** 에 대해서만 설명하겠다.
 
