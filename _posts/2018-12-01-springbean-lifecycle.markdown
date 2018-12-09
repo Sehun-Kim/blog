@@ -329,8 +329,15 @@ public class SoccerController {
 ![Screenshot](http://cfile2.uf.tistory.com/image/22535642580C4AF12CF6AD)
 
 우리는 객체를 사용하기 위해서 new 생성자를 이용하거나 getter/setter 기능을 써야만 했다. 한 어플리케이션에는 이러한 객체가 무수히 많이 존재하고 서로 참조하고 있을 것이다. 그 정도가 심할 수록 의존성이 높다고 표현한다. 낮은 결합도와 높은 캡슐화로 대변되는 OOP에서 높은 의존성은 매우 지양된다.
+> 애플리케이션 유지보수 경험이 많지 않은 시점에 DI를 접할 경우 필요성을 느끼기 쉽지 않다. 경험이 많지 않은 상태에서 필요성을 느낄 수 있는 좋은 방법은 테스트 코드를 구현할 때이다.
 
 의존성 제어, 즉 객체 간의 의존성을 낮추기 위해 바로 Spring 컨테이너가 사용된다.
+
+```
+- 코드가 깔끔해지고 사용하기 쉽다.
+- 재사용하기 좋다.
+- 테스트하기 쉽다.
+```
 
 ### 종류
 ![Screenshot](https://www.slipp.net/wiki/download/attachments/25527577/ApplicationContext_2.jpg?version=1&modificationDate=1453340947000&api=v2)

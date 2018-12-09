@@ -23,8 +23,10 @@ sitemap :
 mySql을 공부하며 알게되는 것들 무작위 정리.
 
 - DB 쿼리의 내부 연산 순서
-> Where -> Select -> ORDER BY -> LIMIT
-
+```
+Where -> Select -> ORDER BY -> LIMIT
+where절로 조회할 테이블 행을 먼저 선택
+```
 - update 순서는 왼 --> 오 (Oracle의 경우 순서 x, 무조건 갱신이전의 값으로 처리함)
 > UPDATE sample SET no = no + 1, a = no;
 
@@ -46,3 +48,56 @@ mySql을 공부하며 알게되는 것들 무작위 정리.
 
 - port 확인
 > SHOW GLOBAL VARIABLES LIKE 'PORT';
+
+### 집계함수
+집합을 다루는 집계함수
+
+일반적인 함수는 인수로 하나의 값을 지정하지만 집계함수는 인수로 집합을 지정함
+
+[sample_table]
+
+| no | name | quantity |
+|----|------|----------|
+| 1  | A    | 1        |
+| 2  | A    | 2        |
+| 3  | B    | 10       |
+| 4  | C    | 3        |
+| 5  | NULL | NULL     |
+
+#### COUNT
+table의 행 갯수구하기.
+COUNT의 인수()는 열 이름이다.
+```sql
+-- table 전체 열의 행의 갯수
+SELECT COUNT(*) FROM [table_name];
+```
+
+특징 : 복수의 값(집합)에서 하나의 값을 계산해 낸다. 집계함수를 SELECT 구에 쓰면 WHERE 구의 존재에 상관없이 결과값을 하나의 행으로 반환
+
+NULL값은 제외하고 계산한다.
+```sql
+SELECT COUNT(no), COUNT(name) FROM sample_table;
+```
+
+| COUNT(no) | COUNT(name) |
+|:---------:|:-----------:|
+|     5     |      4      |
+
+#### DISTINCT
+중복을 제거한 행을 보여줌. `ALL`을 쓰면 중복 유무 상관없이 모든 행 반환
+```sql
+SELECT DISTINCT name FROM sample_table;
+```
+
+| name |
+|:----:|
+|   A  |
+|   B  |
+|   C  |
+| NULL |
+
+
+- SUM
+- AVG
+- MIN
+- MAX
