@@ -34,6 +34,7 @@ sitemap :
 - [Tip](#2-4)
 3. [Design Pattern](#3)
 - [MVC](#3-1)
+- [Builder](#3-2)
 
 <br>
 <br>
@@ -357,7 +358,7 @@ lList.add(1);
 
 ---
 
-## <a id="3"></a>4. Design Pattern
+## <a id="3"></a>3. Design Pattern
 
 
 ### <a id="3-1"></a>3-1 MVC 패턴
@@ -395,4 +396,196 @@ VO는 개발자가 추상화하여 정의한 상수이다. 넓은 범위가 아�
 ImmutableObject의 값을 변경할 일이 생긴다면,
 메소드로 값을 변경한 새로운 객체를 생성하여라.
 ```
+
+
+### <a id="3-2"></a>3-2 Builder 패턴
+객체 생성을 위해 사용하는 디자인 패턴
+- **객체 생성**과 **조립 방식**을 분리하는 것이 목적
+- 코드 읽기와 유지보수가 용의해진다.
+
+> 생성자의 인자가 많을 경우 **Builder 패턴** 적용을 고려하라.
+> https://cheese10yun.github.io/intellij-builder-pattern/
+> https://johngrib.github.io/wiki/builder-pattern/
+
+#### 기존의 생성자를 이용한 방식
+필수 인자 외에 선택인자들을 받아 객체를 만들 때, 코드 수정이 어려움. 인자 수가 많아지면 인자의 위치가 어떤 필드인지 알기 힘들다.
+
+```java
+public class Person {
+    private final String name; // 필수
+    // 선택
+    private int age;
+    private int height;
+    private String university;
+    private String[] hobby;
+
+    public Person(String name) {
+        this.name = name;
+    }
+
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    public Person(String name, int age, int height) {
+        this.name = name;
+        this.age = age;
+        this.height = height;
+    }
+
+    public Person(String name, int age, int height, String university) {
+        this.name = name;
+        this.age = age;
+        this.height = height;
+        this.university = university;
+    }
+
+    public Person(String name, int age, int height, String university, String[] hobby) {
+        this.name = name;
+        this.age = age;
+        this.height = height;
+        this.university = university;
+        this.hobby = hobby;
+    }
+}
+```
+
+### Java Bean 방식
+`setter` 메소드를 사용하여 어떤 인자를 추가하는지 알 수 있다. 그리고 생성자가 여러개일 필요가 없어서 좋다. 하지만 한번에 객체를 생성할 수 없고, 객체를 만들고 나서 계속 값을 추가해 주어야한다. **ImmutableObject**(변경 불가능한 객체)를 만들 때 쓸 수 없는 방식이다.
+
+```java
+public class Person {
+    private String name;
+    private int age;
+    private int height;
+    private String university;
+    private String[] hobby;
+
+    public Person() {
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public String getUniversity() {
+        return university;
+    }
+
+    public void setUniversity(String university) {
+        this.university = university;
+    }
+
+    public String[] getHobby() {
+        return hobby;
+    }
+
+    public void setHobby(String[] hobby) {
+        this.hobby = hobby;
+    }
+}
+```
+
+### Builder 패턴을 쓸 경우
+한번에 객체를 생성할 수 있다(chaining이 가능하기 때문에). 또한 인자를 추가하기 쉽고, 추가할 때 마다 인자가 어떤 인자인지 확실하게 구별할 수 있다. `setter`메소드를 쓰지 않기때문에 **ImmutableObject** 만들 수 있다.
+
+`build()`를 호출할 때 값의 유효성 검사를 전담시킬 수 있다.
+
+```java
+Person sehun = Person.PersonBuilder
+        .aPerson()
+        .withName("sehun")
+        .withAge(28)
+        .withHeight(178)
+        .withUniversity("SKHU")
+        .withHobby(new String[]{"sleep", "music"})
+        .build();
+```
+
+```java
+// inner builder (클래스 내부에 inner class로 빌더를 가질 경우)
+public class Person {
+    private final String name;
+    private int age;
+    private int height;
+    private String university;
+    private String[] hobby;
+
+    public Person(String name) {
+        this.name = name;
+    }
+
+    public static final class PersonBuilder {
+        private String name;
+        private int age;
+        private int height;
+        private String university;
+        private String[] hobby;
+
+        private PersonBuilder() {
+        }
+
+        public static PersonBuilder aPerson() {
+            return new PersonBuilder();
+        }
+
+        public PersonBuilder withName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public PersonBuilder withAge(int age) {
+            this.age = age;
+            return this;
+        }
+
+        public PersonBuilder withHeight(int height) {
+            this.height = height;
+            return this;
+        }
+
+        public PersonBuilder withUniversity(String university) {
+            this.university = university;
+            return this;
+        }
+
+        public PersonBuilder withHobby(String[] hobby) {
+            this.hobby = hobby;
+            return this;
+        }
+
+        public Person build() {
+            Person person = new Person(name);
+            person.age = this.age;
+            person.height = this.height;
+            person.university = this.university;
+            person.hobby = this.hobby;
+            return person;
+        }
+    }
+}
+```
+
+
 ---
