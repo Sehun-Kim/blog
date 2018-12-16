@@ -23,6 +23,7 @@ sitemap :
 ### Layered Architecture
 ![Screenshot]({{ site.url }}/assets/images/spring-web-app-architecture.png)
 
+계층형 설계
 
 ---
 
@@ -170,6 +171,8 @@ Domain(Model, Entity) 객체는 각 Layer에서 필요한 시점에 생성
 ```
 
 ### Fixture
+> https://gist.github.com/bverbeken/5724148
+
 테스트를 진행하다보면 각 Test Case 별로 비슷한 데이터를 계속해서 생성해야 하는 상황이 발생한다. 그래서 각 테스트용 데이터를 매번 만들어 사용한다. 이것을 **Fixture**(테스트용 데이터)라 한다.
 
 Fixture를 만들기 쉽도록 할 때 **[Builder Pattern]({{ site.url }}/OOP/#3-2)** 을 적용하거나, 자주 사용하는 Fixture를 미리 만들어놓고 사용하기도 한다.

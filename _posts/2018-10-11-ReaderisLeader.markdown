@@ -29,7 +29,7 @@ externalLink: false
 - **스프링 입문을 위한 자바 객체지향의 원리와 이해**
 - *SQL 첫걸음 (~4장)*
 - **코딩을 지탱하는 기술**
-- *그림으로 배우는 Http & Network Basic (~6장)* 
+- **그림으로 배우는 Http & Network Basic** 
 
 #### 일반
 - **상실의 시대**
