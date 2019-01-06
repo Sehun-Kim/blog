@@ -254,6 +254,9 @@ Student james = new Student(); // o
 
 
 ### <a id="2-4"></a> 2-4 Tip
+- 객체를 객체답게 쓰는 법
+> 인스턴스 변수와 인스턴스 메소드가 100% 의존관계를 맺도록 한다. 인스턴스 변수와 무관한 메소드는 있으면 안된다.
+
 - 패키지 명은 항상 소문자로 작성
 > util, domain, view
 
@@ -322,7 +325,6 @@ class B extend A {
 
 }
 {% endhighlight %}
-
 
 - 여러 클래스의 *일부분만* '중복'일 때 `abstract 클래스`의 `abstract 메소드`로 만들면 중복을 제거할 수 있다.
 
