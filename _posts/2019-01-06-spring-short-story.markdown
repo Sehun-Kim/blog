@@ -1,5 +1,5 @@
 ---
-title: "[Spring] Servlet, Tomcat, Spring 그 흐름에 대한 아주 짧은 이야기"
+title: "[Spring] Tomcat, Servlet, Spring. Request 흐름에 대한 아주 짧은 이야기"
 layout: post
 date: 2019-01-06
 image:
@@ -19,22 +19,21 @@ sitemap :
   priority : 1.0
 ---
 
-#### Client to Server 요청 흐름
+#### Client로부터 Server까지 Http Request 요청의 흐름
 ![Screenshot]({{ site.url }}/assets/images/webserver.png)
-```
-Client(Browser) -> WebServer(Apache) -> WAS(Tomcat) ->
-Servlet(ServletDispatcher) -> DI Container -> Controller
-```
+
+###### Client(Browser) - WebServer(Apache) - WAS(Tomcat) - Servlet(ServletDispatcher) - DI Container - Controller
+
 
 ## Web Server
 > Apache, nginx
 
-흔히 웹 서버라 하면 큰 의미에서 웹 어플리케이션이 저장되어 있는 서버라고 생각한다. 큰 의미로는 맞는 말이나 의미를 좁혀보면 정적 컨텐츠를 제공하는 것이 웹서버이다.
+흔히 웹 서버라 하면 웹 어플리케이션이 설치되어 웹 서비스를 제공하는 서버라고 생각한다. 큰 의미로는 맞는 말이지만, 좁은 의미로 사용한다면 정적 컨텐츠를 제공하는 것이 웹서버이다.
 
-사용자가 웹 서버로 요청을 보내면 먼저 웹서버가 요청을 보고 동적컨텐츠라면 **WAS** 로 정적컨텐츠라면 웹 서버에서 직접 응답을 해준다. 정적 컨텐츠의 예를 들자면 **변화하는 내용이없는 html 문서**, css, image 등의 문서.
+사용자가 웹 서버로 요청을 보내면 먼저 웹서버가 요청을 보고 동적컨텐츠를 제공해야한다면 **WAS** 로 정적컨텐츠를 제공해야한다면 웹 서버에서 직접 응답을 한다.(예시일뿐 모두가 그렇다는 뜻은 아니다) 정적 컨텐츠의 예를 들자면 **변화하는 내용이없는 html 문서**, css, imgae 같은 파일을 말한다.
 
 ## CGI?
-원래 **Web Server**(Java 기준 Apache)는 이미 저장되어 있는 정적인 컨텐츠(Html)만 응답할 수 있다. 만약 사용자가 직접 정보를 찾거(검색)나 기록(저장)을 하려면 웹서버를 직접 고치는 작업이 필요했다. 때문에 사용자의 입력과 요청 url에 따라 동적으로 변하는 페이지가 필요하게 되었고, 웹서버에서 동적인 처리를 담당할 표준인 **CGI**(Common Gateway Interface)가 등장하게 되었다.
+**Web Server**(Java 기준 Apache)는 이미 저장되어 있는 정적인 컨텐츠(Html)를 응답한다. 만약 사용자가 직접 정보를 찾거나(검색) 기록(저장)을 하려면 웹서버의 문서를 직접 고치는 작업이 필요했다. 때문에 사용자의 입력과 요청 url에 따라 동적으로 변하는 페이지가 필요하게 되었고, 웹서버에서 동적인 처리를 담당할 표준인 **CGI**(Common Gateway Interface)가 등장하게 되었다.
 
 CGI는 서버와 응용 프로그램간에 데이터를 주고받기 위한 방법이나 규약을 뜻한다.
 ```
@@ -58,14 +57,14 @@ Web Application Server와 Web Server의 가장 큰 차이는 동적처리를 하
 
 WAS는 동적컨텐츠뿐만 아니라 정적컨텐츠도 처리할 수 있고(웹서버의 역할도 할 수 있다는 뜻) DB를 조회하는 역할도 담당한다.
 
-JAVA의 대표적인 Servlet Container(WAS)는 Apache Tomcat으로 각 서블릿의 실행하고 관리하는 역할을 대신해준다. 예를 들어 요청마다 스레드를 만들고, 통신을 위한 소켓을 연결하고, 서블릿의 생성과 소멸 모두 Container가 담당한다.
+JAVA의 대표적인 Servlet Container(WAS)는 Apache Tomcat으로 각 서블릿을 실행하고 관리하는 역할을 대신해준다. 요청마다 스레드를 만들고, 통신을 위한 소켓을 연결하고, 서블릿의 생성과 소멸 주기 관리를 모두 Container가 담당한다.
 
 ## Spring MVC
 서블릿도 Interface(표준)이므로 구현체가 따로 존재한다. Spring MVC는 웹 어플리케이션을 만드는데 특화된 서블릿 구현체이다.
 
-결국 사용자가 스프링 어플리케이션이 있는 내 웹서버에 요청을 보내게 되면 WebServer -> WAS(Tomcat) -> ServletDispatcher 순으로 요청을 전달 받게 된다. **Spring MVC** 는 ServletDispatcher라는 Servlet으로 요청이 오면 녀석이 요청의 url을 분석하여 해당 요청을 수행할 수 있는 Controller에 요청을 보내준다.
+결국 사용자가 스프링 어플리케이션이 있는 내 웹서버에 요청을 보내게 되면 WebServer -> WAS(Tomcat) -> ServletDispatcher 순으로 요청을 전달 받게 된다. **Spring MVC** 는 ServletDispatcher라는 Servlet으로 요청이 오면 녀석이 요청의 url을 분석하여 해당 요청을 수행할 수 있는 Spring Bean(Controller)에 요청을 보내준다.
 
-Spring MVC에서도 서블릿 내에서 객체를 관리하고 실행해줄 역할을 할 Spring(혹은 DI) Container가 존재한다. 해당 [컨테이너]({{ site.url }}/springbean-lifecycle/)에 대한 설명은 이 글에 자세히 되어있다.
+Spring MVC에도 서블릿 내에서 객체의 생명주기를 관리하고 실행해줄 역할을 할 Spring(혹은 DI) Container가 존재한다. 해당 [컨테이너]({{ site.url }}/springbean-lifecycle/)에 대한 설명은 이 글에 자세히 되어있다.
 
 ```
 톰캣이 실행되면 ServletDispatcher를 생성하고 등록한다.
