@@ -22,6 +22,13 @@ sitemap :
 ---
 
 # HTTP
+HTTP는 무상태이다.
+#### Stateless vs State
+
+무상태의 단점을 보완하기 위한 방법
+- polling
+- long polling
+- web Socket
 
 ## Http 상태코드
 ![Screenshot]({{ site.url }}/assets/images/http_status_code.png)
@@ -29,9 +36,16 @@ sitemap :
 > 하지만 응답으로 돌아온 상태코드와 실제 상황이 불일치할 수 있다.
 > 또, 브라우저는 응답을 받았을 때 제일 먼저 상태코드를 확인하여 성공여부를 파악한다.
 
+### 101
+protocol 변경 시 사용
+> Web Socket으로 프로토콜을 변경할 경우
+
 ### 2xx (Success)
 2xx번대 리스폰스는 요청이 정상처리 되었음을 나타냄
 #### 200 OK
+#### 201 Created
+Post 요청에 대한 응답으로 하나 이상의 새로운 자원이 서버 상에 성공적으로 생성되었음을 나타낸다. 보통 Restful API의 Post 요청에 대한 응답으로 쓰인다.
+
 #### 204 No Content
 #### 207 Partial Content
 Range에 의해 범위가 지정된 만큼 엔티티를 전달
@@ -51,6 +65,8 @@ Range에 의해 범위가 지정된 만큼 엔티티를 전달
 #### 304 Not Modified
 클라이언트에서 보낸 조건부 요청에 대해 리소스에 대한 접근은 허락하지만 조건이 충족되지 않다.(사실 리다이렉트와는 관계 x)
 
+#### 307 Temporary Redirect
+
 ### 4xx (Client Error)
 클라이언트에 의해 에러가 발생했을 때
 
@@ -62,6 +78,7 @@ Range에 의해 범위가 지정된 만큼 엔티티를 전달
 처음 401 응답을 받을 때 인증을 위한 다이얼이 표시된다.
 
 #### 403 Forbidden
+권한이 없는 경우
 요청을 받은 리소스의 액세스가 거부되었을 때(허가되지 않은 접근), 거부된 이유는 엔티티 바디에 넣어 응답해줌
 
 #### 404 Not Found

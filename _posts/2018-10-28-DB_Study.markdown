@@ -1,13 +1,12 @@
 ---
-title: "[DB] mySql Tip"
+title: "[DB] mySql 기초"
 layout: post
 date: 2018-10-28
 image:
 headerImage: false
 tag:
-- mySql
+- MySql
 - Database
-- JDBC
 category: blog
 author: sehunkim
 description: DB 공부
@@ -16,24 +15,13 @@ sitemap :
   changefreq : daily
   priority : 1.0
 ---
-# *주의*
-<span class="evidence">비정기적으로 수정하는 문서</span>
 
 ## Summary:
-mySql을 공부하며 알게되는 것들 무작위 정리.
+MySql을 공부하며 알게되는 기초 지식 무작위 정리.
 
-- DB 쿼리의 내부 연산 순서
-```
-Where -> Select -> ORDER BY -> LIMIT
-where절로 조회할 테이블 행을 먼저 선택
-```
-- update 순서는 왼 --> 오 (Oracle의 경우 순서 x, 무조건 갱신이전의 값으로 처리함)
-> UPDATE sample SET no = no + 1, a = no;
+---
 
-- 논리삭제 vs 물리삭제
-> 논리삭제 : 체크할 수 있는 컬럼을 만들어서 물리적으로 삭제되진 않았지만 조회할 때 체크 컬럼을 확인하여 삭제 여부를 판단.
-> 물리삭제 : 실제 물리적 저장소 내에 data를 delete하는 것
-
+#### 쿼리 tip
 - database들 조회
 > SHOW DATABASES;
 
@@ -49,13 +37,49 @@ where절로 조회할 테이블 행을 먼저 선택
 - port 확인
 > SHOW GLOBAL VARIABLES LIKE 'PORT';
 
-### 집계함수
-집합을 다루는 집계함수
+---
 
-일반적인 함수는 인수로 하나의 값을 지정하지만 집계함수는 인수로 집합을 지정함
+## 쿼리의 연산 순서
+WHERE 구를 포함한 쿼리를 실행할 때 조회할 테이블의 행을 먼저 선택하게 된다. 그리고 가장 마지막에 조회된 행들 중에 결과로 출력할 갯수를 제한한다.
+```
+WHERE -> GROUP BY -> HAVING -> SELECT -> ORDER BY -> LIMIT
+```
 
-[sample_table]
+## 논리삭제 vs 물리삭제
+실제 데이터베이스에서 데이터를 삭제할 경우, 데이터를 복구할 필요가 있을 때 문제가 된다.
 
+#### **논리삭제**
+- 체크할 수 있는 컬럼을 만들어서 물리적으로 삭제되진 않았지만 조회할 때 체크 컬럼을 확인하여 삭제 여부를 판단.
+- 기존 테이블의 데이터는 삭제하고, 삭제한 데이터가 모여있는 테이블을 새로 생성
+
+#### **물리삭제**
+ 실제 물리적 저장소 내에 data를 delete하는 것
+
+## UPDATE 순서
+> Oracle의 경우 순서 x, 무조건 갱신이전의 값으로 처리함
+
+업데이트 순서는 왼 -> 오
+```mysql
+UPDATE sample SET no = no + 1, a = no;
+```
+상단의 쿼리는 no컬럼에 먼저 1 증가한 값이 들어가고 a컬럼에는 증가한 no컬럼의 값이 들어가게 된다.
+
+---
+# SAMPLE TABLE
+```mysql
+CREATE TABLE sample (
+    no INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(30),
+    quantity INT(30)
+);
+
+INSERT INTO sample (no, name, quantity) VALUES (1, 'A', 1);
+INSERT INTO sample (no, name, quantity) VALUES (2, 'A', 2);
+INSERT INTO sample (no, name, quantity) VALUES (3, 'B', 10);
+INSERT INTO sample (no, name, quantity) VALUES (4, 'C', 3);
+INSERT INTO sample (no, name, quantity) VALUES (5, NULL, NULL);
+```
+```
 | no | name | quantity |
 |----|------|----------|
 | 1  | A    | 1        |
@@ -63,41 +87,433 @@ where절로 조회할 테이블 행을 먼저 선택
 | 3  | B    | 10       |
 | 4  | C    | 3        |
 | 5  | NULL | NULL     |
+```
+---
+
+## 집계함수
+집합을 다루는 집계함수. 일반적인 함수는 인수로 하나의 값을 지정하지만 집계함수는 인수로 집합을 지정함
+
 
 #### COUNT
-table의 행 갯수구하기.
-COUNT의 인수()는 열 이름이다.
+> table의 행 갯수구하기. COUNT의 인수로 열 이름이 들어간다.
+
+일반적인 함수는 인수로 하나의 값을 지정하지만, 집계함수는 인수로 집합을 지정한다. 복수의 값(집합)에서 하나의 값을 계산해 낸다.
+그래서 **집합함수** 라 불린다.
+
+집계함수를 SELECT 구에 쓰면 WHERE 구의 존재에 상관없이 결과값을 하나의 행으로 반환.
+SELECT 구는 WHERE 구보다 나중에 처리 된다. 때문에 WHERE구로 조건을 지정하면 테이블 전체가 아니고 검색된 행이 COUNT함수로 넘어가게 된다.
+WEHER -> SELECT 이런식으로 계산할 수 있다.
+
+계산 할 때, NULL값은 제외하고 계산한다. 총 행이 **5** 개인 `sample` 테이블이 있을 때, 테이블은 세 개의 열을 가지고 있다. 다른 열에는 NULL이 있고 no 열에는 NULL값이 없을 때, 각 열에 COUNT() 함수를 사용하면, NULL 값이 있는 열은 4, NULL값이 없는 열은 5가 결과값으로 나오게 된다.
+
+만약 `COUNT(*)`를 사용하여 전체열을 집계하면 5가 나온다.
+
 ```sql
 -- table 전체 열의 행의 갯수
-SELECT COUNT(*) FROM [table_name];
+SELECT COUNT(*) FROM sample;
 ```
 
-특징 : 복수의 값(집합)에서 하나의 값을 계산해 낸다. 집계함수를 SELECT 구에 쓰면 WHERE 구의 존재에 상관없이 결과값을 하나의 행으로 반환
-
-NULL값은 제외하고 계산한다.
-```sql
-SELECT COUNT(no), COUNT(name) FROM sample_table;
+```
+| COUNT(*) |
+|----------|
+|    5     |
 ```
 
+```mysql
+SELECT COUNT(no), COUNT(name) FROM sample;
+```
+
+```
 | COUNT(no) | COUNT(name) |
-|:---------:|:-----------:|
+|-----------|-------------|
 |     5     |      4      |
+```
 
 #### DISTINCT
-중복을 제거한 행을 보여줌. `ALL`을 쓰면 중복 유무 상관없이 모든 행 반환
-```sql
-SELECT DISTINCT name FROM sample_table;
+`distinct`는 열명이 아닌 예약어이다. 열의 중복된 값을 제거하고 나머지 전체 행을 조회해서 반환한다. `ALL`을 쓰면 중복 유무 상관없이 모든 행 반환
+
+```mysql
+SELECT DISTINCT name FROM sample;
 ```
 
+```
 | name |
-|:----:|
+|------|
 |   A  |
 |   B  |
 |   C  |
 | NULL |
+```
+
+#### 기타 집계함수
+
+수치형 집합을 계산할 수 있는 집계함수
+
+- **SUM**
+- **AVG**
+
+문자열, 날짜시간형에도 적용할 수 있는 집계함수
+
+- **MIN**
+- **MAX**
+
+---
+
+## 그룹화
+**GROUP BY** 구를 이용하여 집계함수로 넘겨줄 집합을 그룹으로 나눌 수 있다. SELECT 구 뒤에 오는 컬럼은 GROUP BY로 지정한 컬럼과, 하나의 값만 가질 수 있는 컬럼이 와야한다.
+
+```mysql
+SELECT name FROM sample GROUP BY name;
+-- GROUP BY 이 후에 오는 column은 여러개 지정 가능
+```
+
+```
+| name |
+|------|
+|   A  |
+|   B  |
+|   C  |
+| NULL |
+```
+
+GROUP BY 함수는 컬럼의 이름으로 그룹을 묶어 중복을 제거하는 효과가 있다. 하지만 단순 중복 제거만 할 것이라면 DISTINCT 함수를 쓰면 된다. **GROUP BY** 함수의 경우 그룹으로 묶은 값을 다른 집계함수로 넘겨주는데 의미가 있다.
+
+```
+<사용예시>
+
+각 점포의 '일별' 매출 데이터가 중앙 판매 관리시스템에 전송되어,
+'점포별' 매출실적을 집계해 어떤 점포가 매출이 올라가는지,
+'어떤 상품' 이 인기가 있는지 등을 분석할 때 사용한다.
+여기서 점포별, 일별, 등 특정 단위로 집계할 때 GROUP BY를 사용한다.
+```
+
+#### 복수열의 그룹화
+
+GROUP BY에 지정한 열 이외의 열은 집계함수를 사용하지 않은 채  SELECT 구에 기술해서는 안된다. 그룹의 값 중 어떤 하나의 값을 지정해서 반환해야 하는데 어떤 값을 반환해야 할 지 모르기 때문에 오류가 날 수 있다.(제품에 따라 다름).
+
+집계함수를 사용하면 하나의 값으로 계산되기 때문에 집계함수를 사용하면 된다.
+
+예를 들어 GROUP BY 한 컬림이 name일 경우 no 컬럼을 불러올 경우 에러가 뜬다. name이 같은 것을 그룹으로 묶었는데 no는 모든 행이 갖고 잇기 때문에 어떤 행을 불러와야 할 지 모르기 때문이다. 이 경우에는 COUNT(no) 함수를 사용해서 하나의 결과 값만 얻어오면 실행할 수 있다.(name 그룹으로 묶은 행의 no 컬럼의 갯수)
 
 
-- SUM
-- AVG
-- MIN
-- MAX
+```mysql
+SELECT name, count(*) FROM sample GROUP BY name;
+-- GROUP BY 이 후에 오는 column은 여러개 지정 가능
+```
+
+```
+| name | count(*) |
+|------| -------- |
+|   A  |     2    |
+|   B  |     1    |
+|   C  |     1    |
+| NULL |     1    |
+```
+
+#### HAVING 구로 조건을 지정
+집계함수는 WHERE 구의 조건식에선 사용할 수 없다.
+
+왜냐면 WHERE 구로 행을 검색하는 것이 GROUP BY로 그룹화 하는 것보다 앞서기 때문이다. (SELECT 구에서 지정한 별명을 WHERE구에서 사용할 수 없는 것과 같은 이유이다.)
+
+```mysql
+SELECT name, count(name) from sample where COUNT(name) = 1 group by name;
+-- 실행되지 않는다.
+```
+
+
+집계한 결과에서 조건에 맞는 값을 따로 걸러 내는  방법은 **HAVING** 구를 사용하는 것이다. GROUP BY 구 뒤에 조건식을 지정할 수 있다.
+
+**WHERE 절로 검색 -> 그룹화 -> HAVING으로 거르기**
+
+```mysql
+SELECT name, COUNT(name) FROM sample GROUP BY name HAVING COUNT(name) = 1;
+```
+
+```mysql
+| name | COUNT(name) |
+|------| ----------- |
+|   B  |       1     |
+|   C  |       1     |
+```
+
+#### 결괏값 정렬
+
+GROUP BY 지정을 해도 정렬되지 않는다. GROUP BY하여 조회한 값을 최종적으로 ORDER BY 구로 정렬할 수 있다.
+
+```mysql
+SELECT name, COUNT(name) FROM sample GROUP BY name ORDER BY COUNT(name);
+```
+---
+
+## 서브쿼리
+()괄호안의 쿼리가 서브쿼리이다. 서브쿼리는 문법적으로 하나의 항목으로 취급한다.
+서브쿼리는 SELECT 명령에 의한 데이터 질의다. 상부가 아닌 하부의 부수적인 질의이다.
+```mysql
+DELETE FROM sample WHERE quantity = (SELECT MIN(quantity) FROM sample);
+```
+
+#### SELECT 명령이 하나의 값만 반환하는 것을 **스칼라** 값을 반환한다고 말한다.
+> SELECT MIN(quantity) FROM sample;
+
+스칼라 값을 반환하게 하려면 SELECT 구에서 단일 열을 지정하고 GROUP BY를 지정하지 않은 채 집계 함수를 사용하면 결과는 단일한 값이 된다. 만약 GROUP BY를 할경우 몇가지 그룹으로 나뉠 가능성이 있기에 결과적으로 단일한 값이 반환되지 않을 수 있다.
+
+또한, WHERE 조건으로 하나의 행만 검색할 수 있다면 단일 값이 되므로 스칼라 값을 반환하는 SELECT 명령이 된다.
+
+통상적으로 특정한 두 가지가 서로 동일한지 여부를 비교할 때는 서로 단일한 값으로 비교하는데, 스칼라 값을 반환하면 서브쿼리로서 사용하기 쉽다.
+
+- 스칼라 값을 반환하는 서브쿼리를 '스칼라 서브쿼리'라 부른다.
+
+#### SELECT 구에서 서브쿼리를 사용할 때
+SELECT 구에서 서브쿼리를 사용할 경우 서브쿼리는 스칼라이어야 한다.
+```mysql
+SELECT
+  (SELECT COUNT(*) FROM sample1) AS sq1,
+  (SELECT COUNT(*) FROM sample2) AS sq2;
+```
+> oracle의 경우 FROM을 생략할 수 없다. 이땐 FROM DUAL을 해주면 된다.
+
+#### SET 구에서 서브쿼리 사용하기
+update하는 set구에서도 서브쿼리를 쓸 수 있다.
+```mysql
+UPDATE sample SET quantity = (SELECT MAX(quantity) FROM sample);
+```
+해당 쿼리를 실행하면 sample 테이블의 quantity 컬럼의 값들이 모두 quantity의 최대값이 된다.
+
+#### FROM 구에서 서브쿼리 사용하기
+FROM 구에서 서브쿼리를 지정할 때는 스칼라 값을 반환하지 않아도 된다. 왜냐면 FROM구에서는 테이블을 가져오기 때문에 스칼라든 여러값이든 상관 없다.
+```mysql
+SELECT * FROM
+(SELECT no, name FROM sample) AS sq;
+```
+> 사실 중첩으로 서브쿼리를 사용할 필요는 없는 내용이지만, FROM에서 어떻게 쓰이는지 보기위해 작성해 봄
+
+#### INSERT 명령과 서브쿼리
+- VALUES 구 대신 SELECT구를 사용하는 방법
+**INSERT SELECT라 불리는 방식** SELECT 명령이 반환하는 열 수와 자료형이 INSERT할 테이블과 일치한다면, 꼭 스칼라 서브쿼리가 아니어도 된다.
+```mysql
+INSERT INTO sample (no, name, quantity) VALUES SELECT 1, '2', 3;
+```
+이 쿼리의 VALUES SELECT 1, '2', 3의 경우 VALUES (1, '2', 3)과 같은 값이다.
+> 열 구성이 똑같은 테이블사이의 열 복사 방법으로 쓰이기도 한다.
+
+
+- VALUES 구의 값으로 서브쿼리를 사용하는 방법
+서브쿼리는 무조건 스칼라 서브쿼리여야 하고, 자료형도 일치해야 한다.
+```mysql
+INSERT INTO sample (no, name, quantity) VALUES (
+  6,
+  (SELECT MAX(name) FROM sample),
+  (SELECT MAX(quantity) FROM sample)
+);
+```
+
+#### EXISTS & NOT EXISTS
+서브쿼리가 값을 반환하는지 조사하는 EXIST 술어
+```
+SELECT name
+  FROM sample
+ WHERE EXISTS
+      (SELECT name
+         FROM sample
+        WHERE quantity > 5);
+```
+
+#### 상관 서브쿼리
+부모 쿼리와 연관되어 처리되는 서브쿼리
+
+부모 쿼리와 연관되어 있기 때문에 서브쿼리 부분만 떼어서 실행시킬 수 없다.
+```mysql
+UPDATE sample
+  SET name = 'sample2의 no 보다 sample의 no 큰 녀석'
+  WHERE EXISTS (SELECT * FROM sample2 WHERE sample.no > sample2.no);
+```
+여기서 서브쿼리의 no 컬럼이 어떤 것을 지칭하는지 떼어놓고 알 수 없기에 따로 실행할 수 없다.
+
+
+#### IN & NOT IN
+집합 안의 값이 존재하는지 조사할 수 있는 명령어
+```mysql
+SELECT * FROM sample WHERE no IN(3, 5);
+SELECT * FROM sample WHERE no = 3 OR no = 5;
+```
+> 단, NULL 값은 = 으로 제대로 계산할 수 없다. 때문에 IS NULL을 이용해서 찾아야 한다.
+
+---
+
+## 데이터베이스 객체
+데이터베이스 객체란 **테이블, 뷰, 인덱스** 등 데이터베이스 내에 정의하는 모든 것을 뜻한다.
+> 데이터베이스 내에서 실체를 가지는 어떤 것. 이름을 가지고 있기 때문에 겹치지 않게 주의해야 한다.
+> 또한 의미없는 이름을 붙이지 않도록 해야한다.
+
+ex) 테이블 : 행과 열이 저장된다. (명령어 SELECT, INSERT는 데이터베이스 내에 존재하는 것이 아니기에 객체가 아니다.)
+
+### 스키마
+데이터베이스 객체는 스키마라는 그릇안에 만들어진다. 스키마 안에 테이블이, 테이블 안에 열을 정의할 수 있다. 각 이름은 중복되면 안되는데 이름 충돌을 하지 않도록 기능하는 그릇을 네임스페이스라 한다.(스키마, 테이블은 일종의 네임스페이스)
+
+```
+<질의어의 종류>
+DML => SELECT, INSERT, DELETE, UPDATE
+DDL => CREATE, DROP, ALTER, TRUNCATE(테이블 정의는 그대로 둔 채 데이터만 삭제)
+DCL => GRANT, REVOKE (권한부여, 제거)
+```
+##### TIP
+ALTER TABLE로 테이블을 변경하는 경우 한 컬럼의 크기를 늘리거나(데이터 손실이 일어날 수 있기에 줄이는 경우는 거의 없다.). 열을 추가하는 경우 많이 사용한다.
+> PRIMARY KEY : 기본키 제약은 테이블 제약이다.
+> NOT NULL : 컬럼 제약
+
+### 1. INDEX
+색인이라 불리는 인덱스는 테이블과는 별개로 독립된 데이터베이스 객체이다. 하지만 테이블에 의존하는 객체이므로 테이블을 삭제하면 인덱스도 삭제된다.
+
+인덱스의 역할은 검색속도의 향상이다. (SELECT 명령에 WHERE 구로 조건을 지정하고 행을 찾는 과정이 검색이다.) 하지만 UPDATE, DELETE 명령의 성능은 느려진다.(단, 행 자체를 조회하는 속도는 빨라진다.)
+
+일종의 **목차같은 역할을 할 수 있다.** 인덱스를 만들면 검색 속도는 향상되지만 삽입, 삭제가 빈번하게 일어나는 경우 인덱스를 최신상태로 갱신하는 처리가 필요하기 때문에 처리속도가 조금 떨어진다.
+
+- 인덱스를 만들기 좋은 자료형은 정수형 자료형이다. 텍스트 자료형은 크기가 가변적이고, 정규화하기 힘들어서 인덱스 생성시 비효율적이다.
+
+![Screenshot](https://upload.wikimedia.org/wikipedia/commons/9/92/B-tree-definition.png)
+###### B-Tree 개념을 잘 정리한 [블로그](https://hyungjoon6876.github.io/jlog/2018/07/20/btree.html)
+
+#### 인덱스의 저장 자료구조 : **B-TREE**
+
+B-tree는 Balanced Tree의 줄임말이다. 이진 트리는 구조의 간결함과 균형만 맞다면 검색, 삽입, 삭제 모두 O(logN)의 성능을 보이는 장점이 있다. 그 중에서도 B-Tree는 이진트리를 확장해서 더 많은 수의 자식을 가질 수 있게 일반화했다.
+
+b-tree는 일반 이진트리와 달리 데이터를 노드가 n개 이상 가질 수 있다. 이때 자식 노드의 데이터 수는 n+1개가 된다. 이진트리처럼 왼쪽이 상위 노드보다 작은 값들, 오른쪽이 상위 노드보다 큰 값들이 온다.
+
+노드의 데이터 사이의 값들은 왼쪽 자식 노드와 오른쪽 자식 노드의 가운데에 새로운 노드가 들어오게 된다.
+
+#### 인덱스의 종류
+인덱스 생성시 아래 키워드를 넣어 종류에 맞게 생성할 수 있다. 또한 테이블 생성시 제약조건으로 지정할 수 있다.
+
+ex) PRIMARY KEY 제약조건이 들어가 있으면 자동으로 기본키를 바탕으로 PRIMARY 인덱스를 만든다.
+
+1. Primary : 중복되지 않는 유일한 키 (Not Nullable)
+> CREATE PRIMARY INDEX 인덱스이름 ON 테이블이름 (컬럼이름, ..);
+
+2. Unique : 중복을 허용하지 않는 유일한 키 (Nullable)
+> CREATE UNIQUE INDEX 인덱스이름 ON 테이블이름 (컬럼이름, ..);
+
+3. Normal : 중복을 허용하는 인덱스
+> CREATE INDEX 인덱스이름 ON 테이블이름 (컬럼이름, ..);
+
+#### EXPLAIN
+EXPLAIN 구를 사용해서 SELECT 구의 실행계획을 알 수 있다.(데이터를 어떤 식으로 조회하여 가져올 지)
+
+인덱스 실행계획을 확인할 수 있는 컬럼
+- **possible_keys** : 해당 SELECT구를 실행할 때 사용가능한 인덱스들
+- **key** : 실재 실행할 때 사용할 인덱스 이름
+- **type** : 테이블에서 행을 어떻게 스캔하는지.
+> const -> ref -> ALL 순으로 속도가 느려진다.
+
+1. 풀 테이블 스캔 : 인덱스가 지정되지 않은 테이블 검색(처음 ~ 끝)
+2. 이진탐색 : 집합을 반으로 나눠서 검색 (크기별로 정렬이 되어있을때만 사용 가능)
+
+#### 인덱스 생성
+테이블의 크기가 크면 인덱스 작성시간도 오래걸리고, 인덱스 저장공간도 많이 차지한다. 또, 컬럼안의 데이터 종류가 적다면(ex)예, 아니오) 인덱스를 사용함으로써 얻는 효율은 거의 없다.
+```mysql
+CREATE INDEX [index_name] ON [table_name] ([column_name1], [column_name2], ..);
+```
+
+### 2. VIEW
+서브쿼리에 이름을 붙이고 데이터 베이스 객체화 한 것을 뷰라고 한다.
+
+원래 SELECT 명령은 객체로 이름을 붙혀 등록할 수 없다. 이렇게 SELECT로 반환된 결괏값에 이름을 붙혀 객체로 관리하여 테이블처럼 사용하는 것이 뷰이다. 일종의 가상 테이블이라 불리지만 **데이터를 쓰거나 지울 수 있는 저장공간을 가지고 있지 않다.** 때문에 SELECT 명령 사용시 서브쿼리로 사용하는 것을 권장한다.
+
+
+#### 뷰의 작성
+
+```mysql
+CREATE VIEW [view_name](column1, column2, ..) AS SELECT 명령
+```
+
+#### 뷰의 약점
+
+뷰는 데이터 베이스 객체로서 저장장치에 저장된다. 하지만 테이블과 달리 대량의 저장공간을 필요로하지 않는다. 다만 저장공간을 소비하지 않는 대신 CPU 자원을 사용한다.
+
+VIEW는 SELECT명령을 사용하는데 이 명령은 테이블에서 행을 검색하고 클라이언트로 반환하는 명령이다 때문에 계산능력을 필요로한다.
+
+**뷰를 참조하면 뷰에 등록되어 있는 SELECT 명령이 실행되고 실행 결과는 일시적으로 보존되고, 뷰를 참조할 때마다 SELECT 명령이 실행된다.**
+
+- **Materialized View**
+  > mysql에서는 사용할 수 없다.
+
+  뷰의 근원이 되는 데이터양이 많고 집계처리를 할 때 뷰가 사용되면 처리 속도가 많이 떨어진다. 또한 뷰를 중첩해서 사용하면 처리속도가 떨어진다.
+
+  이를 회피하기 위해 뷰를 일시적으로 저장해서 쿼리 종료시 사라지게 하는 것이 아니라. 테이블처럼 저장해 사용하는 **머티리얼라이즈드 뷰**가 있다.
+
+  머티리얼라이즈드 뷰는 처음 참조되었을 때 데이터를 저장함, 이후 다시 참조할 때 이전에 저장해 둔 데이터를 그대로 사용한다. 단, 뷰에서 참조한 테이블에 변경이 일어났을 경우 SELECT 명령을 RDBMS가 자동으로 실행한다. 테이블 데이터가 자주 변경되지 않는 경우 사용하면 좋다.
+
+- **함수 테이블**
+
+  뷰를 구성하는 SELECT 명령은 단독으로 실행할 수 있어야 한다. 상관 서브쿼리 처럼 부모쿼리와 어떤식으로 연관된 서브쿼리는 뷰의 SELECT 명령으로 사용할 수 없다. 이런 약점을 보완하기 위해 함수테이블을 사용하면 된다.
+
+  함수 테이블은 테이블을 결괏값으로 반환해주는 사용자 정의 함수다. 함수의 인수에는 WHERE 조건을 붙힐 수 있기 때문에 상관 서브쿼리 처럼 동작할 수 있다.
+
+---
+
+## 집합연산
+
+관계형모델에서 관계형은 수학집합론의 관계형 이론에서 유래했다. 간단하게 생각하면 데이터베이스의 데이터를 집합으로 간주해 다루기 쉽게 하자는 것이다.
+
+테이블 하나를 집합하나로 간주 한다면 집합의 요소는 하나의 행이 될 수 있다. 만약 **SELECT 명령으로 몇 개의 행이 반환 되면 그 결과가 하나의 집합** 이라 할 수 있다.
+
+### UNION
+> 같은요소(행)가 있을 경우 하나의 행으로 침, 같은 행이 있는지 검사하는 작업 DISTINCT를 한다.
+
+**합집합** : 두개의 select 명령을 하나의 명령으로 합침
+
+```mysql
+SELECT [column_name] FROM [table1]
+UNION
+SELECT [column_name] FROM [table2];
+```
+
+이 때 열의 갯수와 열의 자료형이 꼭 같아야 한다. **UNION**한 집합들을 정렬하고 싶은 경우 마지막 SELECT 명령 뒤에 ORDER BY를 붙여야 한다. 또 별명(AS)을 붙여서 이름을 일치시켜주어야 한다.
+
+##### UNION ALL
+
+> 중복값이 없는 테이블들을 합칠 경우 UNION ALL이 더 성능이 좋다.
+
+기본은 UNION 명령은 DISTINCT 명령이 기본적으로 실행된다.  중복되는 행을 모두 가져오고 싶을 때는 ALL 키워드를 붙히면 된다.
+
+
+
+### JOIN
+
+**곱집합** : 두 개(혹은 여러 개의) 테이블을 결합시키는 것
+
+#### 교차결합(Cross Join)
+> 곱집합
+> UNION과 다른 점은 UNION은 한 컬럼에 세로로 값을 추가하는 것이고, 교차결합은 새로운 컬럼을 추가하여 세로로 확장하는 것이다.
+
+FROM구에 테이블을 두 개 이상 지정하면 곱집합으로 계산한다. (INNER JOIN)
+
+```mysql
+SELECT * FROM [TABLE1], [TABLE2]
+```
+
+
+#### 내부결합 (INNER JOIN)
+> 교집합
+
+다 수의 테이블을 교차결합으로 사용하는 경우는 드물다. 수학에서 집합은 유일한 요소로 구성된다. 중복된 값이 존재하지 않는다는 뜻이다. 관계형 데이터베이스에서 테이블에서 유일한 요소는 기본키이다.
+
+내부결합을 사용해서 테이블을 결합시키면 on으로 지정한 조건을 충족하는 행들만 합쳐진다.
+
+```mysql
+SELECT [table1.column], [table2.column] FROM [table1] INNER JOIN [table2] ON [table1.key] = [table2.foreignkey];
+```
+
+#### 외부결합 (Outer Join)
+> 한쪽에 치우친 집합전체
+
+어느 한쪽에만 존재하는 데이터행을 어떻게 다룰지 표현하는 결합 방식이다.
+
+기존 내부결합을 사용하면 양 테이블에 존재하는 데이터만 결과로 보여주었다. 하지만 한쪽에만 존재하는 데이터도 포함해서 결과값을 얻고 싶을때는 어떻게 해야할까?
+
+```mysql
+[table1.column], [table2.column] FROM [table1] LEFT JOIN [table2] ON [table1.key] = [table2.foreignkey];
+```
+
+LEFT, RIGHT 조인을 사용할 경우 JOIN 키워드 왼쪽 혹은 오른쪽 테이블을 기준으로 외부결합을 한다. 이렇게 하면 왼쪽 테이블에 있는 값이 오른쪽 테이블에 없더라도 결과를 표시해 준다.​
+
+- WHERE 조건을 사용하여 **여집합**도 구할 수 있다.

@@ -26,7 +26,7 @@ Server 성능 개선을 위한 네트워크 최적화 방안에 대해 알아보
 3. [Http Compression](#3)
 4. [Browser의 자원 요청 방식](#4)
 5. [Http Connection](#5)
-6. [Request 횟 수 줄이기](#6)
+6. [Request 횟수 줄이기](#6)
 
 ---
 
@@ -218,7 +218,7 @@ google.com의 ip주소(넷마스크) : 74.125.204.147
 도메인 명과 IP 주소를 구분하여 사용하는 이유는 속도때문이다. 도메인명은 사람이 인식하기 쉽고, IP주소는 컴퓨터 입장의 주소이기 때문에 두 가지를 매핑하여 사용하는 것이다.
 
 #### Socket 라이브러리가 IP 주소를 찾는 기능을 제공
-three way handshake를 해서 소켓을 열고 connection 하기위한 확인 절차 
+three way handshake를 해서 소켓을 열고 connection 하기위한 확인 절차
 
 ### 3) 프로토콜 스택에 메시지 송신을 의뢰한다.
 
@@ -298,4 +298,4 @@ Connection: close # 비지속연결
 
 ---
 
-## <a id="6"></a>6. Request 횟 수 줄이기
+## <a id="6"></a>6. Request 횟수 줄이기
