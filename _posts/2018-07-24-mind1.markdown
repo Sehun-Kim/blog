@@ -1,5 +1,5 @@
 ---
-title: "준비만 하는 겁쟁이(1)"
+title: "[회고] 준비만 하는 겁쟁이(1)"
 layout: post
 date: 2018-07-24
 image:
