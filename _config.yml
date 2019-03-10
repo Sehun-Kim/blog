@@ -1,6 +1,6 @@
 # main text of home
 name: Sehun Kim
-bio: 경영학도의 야매 프로그래밍
+bio: 읽기 좋은 코드가 에러도 안 난다.
 
 # twitter summary info
 description: A blog about technology and stuff related
@@ -37,7 +37,7 @@ disqus:
 facebook: sechune
 # twitter: mytwitter
 # google: mygoogle
-instagram: se_chun_e
+# instagram: se_chun_e
 # pinterest: mypinterest
 # linkedin: mylinkedin
 # youtube: myyoutube

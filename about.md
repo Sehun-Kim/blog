@@ -17,22 +17,24 @@ layout: page
 <h2>Skills</h2>
 
 <ul class="skill-list">
-	<li>HTML5</li>
-	<li>JSP</li>
-	<li>Javascript</li>
-	<li>Git</li>
+	<li>Java</li>
 	<li>Ruby</li>
 	<li>Python3</li>
+	<li>HTML5</li>
+	<li>Javascript</li>
+	<li>Git</li>
 	<li>MySQL</li>
 	<li>Rails</li>
 	<li>Spring</li>
+	<li>Spring-Boot</li>
 	<li>AWS</li>
+	<li>Jpa/Hibernate</li>
 </ul>
 
 <h2>Personal Projects</h2>
 
 <ul>
-	<li><a href="http://skhubee.herokuapp.com/">SkhuBee</a></li>
-	<li><a href="https://github.com/Sehun-Kim/professor101">Professor Kim</a></li>
-	<li><a href="https://github.com/Sehun-Kim/IndianPoker_JAVA">AI IndianPoker</a></li>
+	<li><a href="https://github.com/Sehun-Kim/skhu_plz_final">SkhuBee</a></li>
+	<li><a href="hhttps://github.com/Sehun-Kim/java-was">Web Application Server</a></li>
+	<li><a href="https://github.com/Sehun-Kim/IndianPoker_Spring-Boot">Web IndianPoker</a></li>
 </ul>
