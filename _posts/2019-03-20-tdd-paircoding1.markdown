@@ -76,6 +76,7 @@ sitemap :
 ![tdd_cycle](https://brainhub.eu/blog/wp-content/uploads/2018/12/test-driven-development-tdd-cycle.jpg)
 <figcaption class="caption">TDD Cycle</figcaption>
 
+
 ```
 [엉클밥(객체 지향 개발의 선구자 “로버트 마틴”)의 TDD 원칙]
 1. 실패하는 테스트를 작성하기 전에는 절대로 프로덕션 코드를 작성하지 않는다.
