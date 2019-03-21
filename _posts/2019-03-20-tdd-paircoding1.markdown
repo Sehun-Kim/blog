@@ -1,5 +1,5 @@
 ---
-title: "TDD 해보니깐 어때? (1)"
+title: "TDD 해보니까 어때? (1)"
 layout: post
 date: 2019-03-20
 image:
