@@ -1,5 +1,5 @@
 ---
-title: "[TDD] TDD를 배워보자"
+title: "[TDD] TDD의 기초개념을 알아보자"
 layout: post
 date: 2018-12-09
 image:

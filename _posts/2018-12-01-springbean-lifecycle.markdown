@@ -1,5 +1,5 @@
 ---
-title: "[Spring] IoC/DI & Spring Bean Life Cycle"
+title: "[Spring] 예제로 배워보는 IoC/DI & Spring Bean Life Cycle"
 layout: post
 date: 2018-12-01
 image:

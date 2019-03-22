@@ -1,5 +1,5 @@
 ---
-title: "[JAVA] Stream & Lambda"
+title: "[JAVA] 예제로 배워보는 Stream & Lambda"
 layout: post
 date: 2018-10-29
 image:
