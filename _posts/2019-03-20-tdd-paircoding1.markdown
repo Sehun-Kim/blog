@@ -38,7 +38,7 @@ sitemap :
 
 처음엔 **두 가지 이유** 로 저 말씀을 완전히 이해하지 못했다.
 - 코드의 품질이 무엇인지.
-- TDD를 사용하면 어떻게 설계가 개선되는지.
+- TDD를 사용하면 무엇이 어떻게 개선되는지.
 
 ### 코드의 품질이란 무엇인가?
 ![QMark]({{ site.url }}/assets/images/qualityMark.png)
@@ -81,7 +81,6 @@ sitemap :
 ### 그래서 TDD를 하면 뭐가 좋은데..?
 ![tdd_cycle](https://brainhub.eu/blog/wp-content/uploads/2018/12/test-driven-development-tdd-cycle.jpg)
 <figcaption class="caption">TDD Cycle</figcaption>
-
 
 ```
 [엉클밥(객체 지향 개발의 선구자 “로버트 마틴”)의 TDD 원칙]
