@@ -534,8 +534,11 @@ TDD를 사용할 경우 테스트 케이스를 매번 통과시켜, 나름 즉�
 <div class="breaker"></div>
 
 # TDD 어땠어?
+TDD를 사용해 프로젝트를 했을 때 장점도 느꼈지만, 좀 더 객관적으로 바라보고 싶다.
 
-### 혼자 만든 콘솔 게임과 TDD를 사용해 개발한 콘솔게임 사이에 어떤 차이가 생겼을까?
+### Before & After
+혼자 만든 콘솔 게임과 TDD를 사용해 개발한 콘솔게임 사이에는 큰 차이가 생겼다.
+
 ![pakages]({{ site.url }}/assets/images/pakages.png)
 <figcaption class="caption">indianpoker pakage</figcaption>
 
