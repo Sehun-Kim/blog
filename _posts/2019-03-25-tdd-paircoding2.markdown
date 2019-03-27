@@ -304,7 +304,8 @@ MVC 패턴을 사용하면, 입출력과 입력 데이터를 실행 부에 전�
 <div class="breaker"></div>
 
 # <a id="tdd_start"></a>TDD, 자 이제 시작이야!
-개발을 시작하려 할 때 우리는 어디서부터 시작해야 할지 막막했다. 우린 답을 찾기위해 실제 현실의 게임 규칙을 바탕으로 역할과 행위를 나누어 보기로 했다.
+개발을 시작하려 할 때 우리는 어디서부터 시작해야 할지 막막했다.
+우린 답을 찾기위해 실제 현실의 게임 규칙을 바탕으로 역할과 행위를 정의해 보았다.
 
 ![insane]({{ site.url }}/assets/images/game_rule.png)
 <figcaption class="caption">Game Rule</figcaption>
