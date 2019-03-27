@@ -413,7 +413,8 @@ public class IndianPokerTest {
 만약 테스트 케이스가 없는 일반적인 상황이었다면 흐름 파악에 더 많은 시간이 필요했을 것이다. 일단 프로그램을 실행해서 어떤 부분이 개발되지 않았는지 찾아보거나, 주석으로 어디까지 만들었고 어떤 부분을 더 만들어야 하는지 표시했어야 했을 것이다(이러한 주석들을 제거하는 것도 불편한 일이다).
 
 그래서 우리는 **테스트 케이스를 일부러 실패하게 만들었다.**
-![DealerTest_fail]({{ site.url }}/assets/images/test_fail.png)
+
+<center><img class="image" src="{{ site.url }}/assets/images/DealerTest_fail" alt="DealerTest_fail"></center>
 <figcaption class="caption">DealerTest Fail</figcaption>
 
 이렇게 테스트 케이스 전체를 실행시키면 한번에 어떤 테스트 케이스가 실패하는지 알 수 있고, 이를 통해 어디까지 개발했었는지 확인할 수 있다.
