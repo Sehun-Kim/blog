@@ -415,7 +415,7 @@ public class IndianPokerTest {
 
 그래서 우리는 **테스트 케이스를 일부러 실패하게 만들었다.**
 
-<center><img class="image" src="{{ site.url }}/assets/images/DealerTest_fail" alt="DealerTest_fail"></center>
+<center><img class="image" src="{{ site.url }}/assets/images/test_fail.png" alt="DealerTest_fail"></center>
 <figcaption class="caption">DealerTest Fail</figcaption>
 
 이렇게 테스트 케이스 전체를 실행시키면 한번에 어떤 테스트 케이스가 실패하는지 알 수 있고, 이를 통해 어디까지 개발했었는지 확인할 수 있다.
