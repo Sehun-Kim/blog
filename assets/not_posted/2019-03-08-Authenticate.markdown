@@ -48,7 +48,7 @@ Base64라는 인코딩 형식은 암호화가 아니기 때문에 아무런 부�
 Basic 인증의 약점을 보완한 방식. Challenge Response 방식이 사용되고 있어, 패스워드를 있는 그대로 직접 보내는 일은 없다.
 
 #### Challenge Response
-![challenge Response](http://ocw.metu.edu.tr/pluginfile.php/2647/mod_resource/content/0/data%20protection%20II/chapterVII/002-4_1.jpg)
+![challengeResponse](http://ocw.metu.edu.tr/pluginfile.php/2647/mod_resource/content/0/data%20protection%20II/chapterVII/002-4_1.jpg)
 
 최초에 상대방에게 인증 요구를 보내고 상대에게서 받은 챌린지 코드를 사용해서 리스폰스 코드를 계산함. 이 값을 상대에게 송신하여 인증을 함
 
