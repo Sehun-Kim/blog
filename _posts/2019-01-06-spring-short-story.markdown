@@ -1,5 +1,5 @@
 ---
-title: "[Spring] Tomcat, Servlet, Spring. Request 흐름에 대한 아주 짧은 이야기"
+title: "[Spring] Request 흐름과 WAS에 대한 아주 짧은 이야기"
 layout: post
 date: 2019-01-06
 image:
@@ -84,8 +84,22 @@ JDBC는 자바 프로그램이 DB와 연결하기 위한 표준 API로써 각 DB
 
 
 ### ORM과 JPA, hibernate의 관계
-> [orm이란?](http://www.incodom.kr/ORM)
+> [ORM이란?](http://www.incodom.kr/ORM)
 
-**Object Relational Mapper** 은 자바 객체와 엔티티를 그대로 연결해주는 mapper이다. Java의 표준 orm 인터페이스 중 유명한 것은 JPA와 myBatis가 있고 hibernate와 iBatis가 두 인터페이스의 유명한 구현체이다.
+**Object Relational Mapper** 은 자바 객체와 엔티티를 그대로 연결해주는 mapper이다. Java의 표준 orm 인터페이스 중 유명한 것은 JPA가 있고 hibernate와 EclipseLink가 인터페이스의 유명한 구현체이다.
+```
+JPA == 인터페이스
+Hibernate == 구현체
+```
+> **정정**
+> myBatis는 ORM이 아닌 SQL Mapper이다.
+> SQL Mapper는 객체(Object)와 SQL 문을 매핑하여 데이터를 객체화하는 기술을 뜻한다.
+> 객체와 관계를 매핑하기보다는 SQL문의 질의 결과와 객체를 매핑시켜주기 때문에 ORM과는 다른 기술이라고 할 수 있다.
+> 대표적인 프레임워크로는 iBatis, MyBatis, Oracle SQLJ 가 있다.  
+
+또 JPA와 Spring Data JPA는 조금 다르다.
+
+Spring Data JPA는 **JPA를 좀 더 쓰기 편하게 추상화 시킨 모듈이다.** 바로 EntityManager를 노출해서 사용하는 것이 아니라. Repository라는 인터페이스를 노출해 사용하게 해 좀 더 사용을 간편하게 해준다.
+
 
 ORM의 밑단에는 DB연결을 위한 JDBC가 동작하고 있다.
