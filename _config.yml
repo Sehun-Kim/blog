@@ -1,6 +1,6 @@
 # main text of home
 name: Sehun Kim
-bio: 읽기 좋은 코드가 에러도 없다.
+bio: 하다보니 되더라구요.
 
 # twitter summary info
 description: A blog about technology and stuff related
@@ -12,9 +12,9 @@ picture: assets/images/profile.jpg
 
 # If you want to include your resume, set to true
 # and specify source (external or local).
-resume: true
+resume: false
 resume-external: true
-resume-url: https://1drv.ms/b/s!AhFo_zEaa9ijxg5Vt4U_1bHl6VvV
+resume-url: https://www.linkedin.com/in/sehun-kim-123763144
 
 url: https://sehun-kim.github.io/sehun
 # your url: http://USERNAME.github.io
@@ -39,7 +39,7 @@ disqus:
 # google: mygoogle
 # instagram: se_chun_e
 # pinterest: mypinterest
-# linkedin: mylinkedin
+linkedin: sehun-kim-123763144
 # youtube: myyoutube
 # spotify: myspotify
 github: Sehun-Kim
@@ -55,7 +55,7 @@ email: sechun0215@gmail.com
 authors:
     sehunkim:
         name: Sehun Kim
-        bio: 야매 프로그래머
+        bio: 하다보니 되더라구요.
         external-image: false
         picture: assets/images/profile.jpg
 

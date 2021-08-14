@@ -4,37 +4,27 @@ layout: page
 ---
 ![Profile Image]({{ site.url }}/{{ site.picture }})
 
-<p>Hi! I'm <strong>Sehun</strong>. I have graduated with a business Management background from Sungkonghoe University and studied in software engineering as my minor-major. It has always been interesting for me to study both IT technology and business. I want to be a developer who makes services that can solve small but frustrating problems.</p>
 
-### LeaderShip
-- LikeLion at Sungkonghoe Univ. (Club Representatives and Tutor)
-- Microsoft Student Partners (Student Evangelist and Team Leader)
+안녕하세요 블로그 주인장 김세훈입니다.
+이렇게 누추한 곳에 방문해주시다니 너무나도 영광입니다.   
 
-### Professional Experience
-- Tutoring QA internship (2017.07 ~ 2017.08)
-- Cooperative SONYEON (Founder and Cooperative Officer / 2015.07~2016.02)
+**제 블로그엔 개인적인 생각들과 개발하며 삽질했던 내용들이 담겨있습니다.**
+글을 즐겨쓰는 편이 아니라 자주 업데이트 되진 않지만, 제 생각과 삽질이 여러분들에게 작은 도움이 된다면 그것이 이 블로그에 존재 이유가 될것입니다.   
 
-<h2>Skills</h2>
+지식이 짧고 글솜씨가 부족하다보니 잘못되거나 오해를 일으킬만한 부분이 있을 수 있습니다. 해당 내용에 코멘트를 남겨주시면 보완하겠습니다.   
 
-<ul class="skill-list">
-	<li>Java</li>
-	<li>Ruby</li>
-	<li>Python3</li>
-	<li>HTML5</li>
-	<li>Javascript</li>
-	<li>Git</li>
-	<li>MySQL</li>
-	<li>Rails</li>
-	<li>Spring</li>
-	<li>Spring-Boot</li>
-	<li>AWS</li>
-	<li>Jpa/Hibernate</li>
-</ul>
+블로그에 방문해주신 모든 분들의 가정에 행복이 깃들기를 기원하겠습니다.   
 
-<h2>Personal Projects</h2>
 
-<ul>
-	<li><a href="https://github.com/Sehun-Kim/skhu_plz_final">SkhuBee</a></li>
-	<li><a href="hhttps://github.com/Sehun-Kim/java-was">Web Application Server</a></li>
-	<li><a href="https://github.com/Sehun-Kim/IndianPoker_Spring-Boot">Web IndianPoker</a></li>
-</ul>
+### Career
+- **kakaopay** (2019.05 ~)
+
+### Skills
+- Java
+- Kotlin
+- Spring-Boot
+- JPA
+- git
+- Ruby/Rails
+- Python3
+- Javascript
