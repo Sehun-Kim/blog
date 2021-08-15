@@ -23,24 +23,23 @@ sitemap :
 ---
 
 ## Java 프로그래밍을 하기위한 구성요소
-Java 프로그래밍을 하기위해선 **JVM, JRE, JDK** 세 가지 구성요소가 모두 필요하다. 일반적으로 JDK를 설치하면 JDK에 다른 구성요소가 포함되어 있기 때문에 개발환경을 셋팅할 수 있다.
+Java 프로그래밍을 하기위해선 **JDK(Java Development Kit)** 가 필요하다. JDK는 자바 프로그램 구동을 위한 요소(JRE)와 자바 프로그램 개발을 위한 요소(javac 및 각종 개발 관련 library)을 포함한 패키지를 지칭한다.   
 
-Java 프로그램을 구동시키기 위해선 JRE만 있어도 프로그램을 구동시킬 수 있다.
+> 자바 프로그램 실행은 JRE만 있어도 된다.
 
 ![Screenshot](http://wikidocs.net/images/page/257/jdk.jpg)
 1. **JDK** (Java Development Kit)
-- 개발도구
 - JRE와 개발용 라이브러리들을 포함하고 있다.
 
 2. **JRE** (Java Runtime Environment)
-- JVM용 운영체제(OS 역할)
 - JVM이 자바 프로그램을 실행하기위해 필요한 라이브러리와 파일들을 갖고있다.
 
 3. **JVM** (Java Virtual Machine)
-- 자바가상머신(하드웨어 역할)
-- JVM은 물리적인 컴퓨터가 아닌 가상컴퓨터이다.
+- 자바가상머신
+- JAVA 프로그램용 운영체제(OS 역할)
 - **.java**(소스코드)로부터 컴파일된 **.class**(자바 바이너리파일)을 실행한다.
-- 플랫폼의존적(Window, Mac, Linux, etc)
+- 자바 바이너리 파일을 플랫폼에 관계없이 독립적으로 실행 가능하도록 JVM이 각 OS 위에서 동작한다.
+- JVM은 각 플랫폼에 의존한다.(Window, Mac, Linux, etc)
 
 ---
 
@@ -51,10 +50,11 @@ Java 프로그램을 구동시키기 위해선 JRE만 있어도 프로그램을 
 ### Class Loader
 자바프로그램을 실행하면 ```.java```파일은 컴파일러를 통해 ```.class```(자바 바이트코드)파일로 변환된다. ```Class Loader```는 해당 파일을 Runtime(실행)하는 시점에 ```Runtime Data Areas```에 로딩시킨다. 즉, 컴파일하는 시점이 아니라 클래스를 처음으로 참조하는 시점(클래스의 인스턴스를 만들 때) ```Class Loader```를 통해 메모리(Runtime Data Areas)에 로드한다.
 
-이 때 모든 Class는 참조되는 순간 **동적**으로 load와 link가 이루어진다. 이 방식을 Dinamic Loading이라고 한다.(어렵..)
+이 때 모든 Class는 참조되는 순간 **동적** 으로 load와 link가 이루어진다. 이 방식을 Dynamic Loading이라고 한다.
 
 ### Runtime Data Areas
-런타임 데이터 영역은 JVM이 운영체제 위에서 실행될 때 할당받는 메모리 영역이다.
+
+런타임 데이터 영역은 JVM이 OS 위에서 실행될 때 할당받는 메모리 영역이다.
 <div class="side-by-side">
     <div class="toleft">
         <img class="image" src="https://d2.naver.com/content/images/2015/06/helloworld-1230-4.png" alt="Alt Text">
@@ -121,14 +121,14 @@ JVM이 읽어 들인 각각의 클래스와 인터페이스에 대한 **Runtime 
 **JIT 컴파일러** 가 컴파일하는 과정은 바이트코드를 하나씩 인터프리팅하는 것보다 훨씬 오래 걸리므로, 만약 한 번만 실행되는 코드라면 컴파일하지 않고 인터프리팅하는 것이 훨씬 유리하다. 따라서, JIT 컴파일러를 사용하는 JVM들은 내부적으로 해당 메서드가 얼마나 자주 수행되는지 체크하고, 일정 정도를 넘을 때에만 컴파일을 수행한다.
 
 #### GC
-Garbage Collection은 메모리 관리를 위한 방법 중의 하나로, 프로그램이 동적으로 할당했던 메모리 영역 중에서 필요없게 된 영역[Heap]을 해제하는 기능입니다. ( new 연산자를 이용한 객체 등 ..)
+Garbage Collection은 메모리 관리를 위한 방법 중의 하나로, 프로그램이 동적으로 할당했던 메모리 영역 중에서 필요없게 된 영역[Heap]을 해제하는 기능. (new 연산자를 이용한 객체)   
 
-Java GC는 객체가 garbage인지 판단하기 위해 reachability 개념을 사용하여 객체의 유효한 참조가 있다면 'reachable' 로 없으면 'unreachable' 로 구별하고, unreachable 객체를 Garbage로 간주하여 GC가 실행한다. 한 객체가 다른 객체를 참조하며, 다른 객체는 또다른 객체를 참조할 경우에는 유효한 최초의 참조가 무엇인기 파악해야 되는데, 이를 객체 참조의 root set이라고 한다.
+Java GC는 객체가 garbage인지 판단하기 위해 reachability 개념을 사용하여 객체의 유효한 참조가 있다면 'reachable' 로 없으면 'unreachable' 로 구별하고, unreachable 객체를 Garbage로 간주하여 GC를 실행한다. 한 객체가 다른 객체를 참조하며, 다른 객체는 또다른 객체를 참조할 경우에는 유효한 최초의 참조가 무엇인기 파악해야 되는데, 이를 객체 참조의 root set이라고 한다.
 
 **`Heap`** 영역에 있는 객체들에 대한 참조의 종류는 4가지이다.
 1. **Heap** 내의 다른 객체에 의한 참조
-2. **JVM Stack**, 즉 Java 메서드 실행 시에 사용하는 지역 변수와 파라미터들에 의한 참조
-3. **Native Stack**, 즉 JNI(Java Native Interface)에 의해 생성된 객체에 대한 참조
+2. **JVM Stack**, Java 메서드 실행 시에 사용하는 지역 변수와 파라미터들에 의한 참조
+3. **Native Stack**, JNI(Java Native Interface)에 의해 생성된 객체에 대한 참조
 4. **Method Area** 의 static 변수에 의한 참조
 
 이들 중 **Heap** 내의 다른 객체에 의한 참조를 제외한 나머지 3개(JVM Stack, Native Stack, Method Area)가 root set으로, reachability를 판가름하는 기준이 된다. 즉 root set으로부터 시작한 객체들은 reachable이며, root set과 무관한 객체들이 unreachable 객체로 GC의 대상이 된다.
@@ -228,7 +228,7 @@ public Main {
 #### 멀티스레드
 ![Screenshot]({{ site.url }}/assets/images/1540366564750.png)
 
-멀티스레드는 ```stack 영역```(Method Area)을 스레드 갯수만큼 분할
+멀티스레드는 ```stack 영역```(JVM stack)을 스레드 갯수만큼 분할
 
 - Spring Framework는 클라이언트의 요청 만큼 스레드를 만든다.
 - 공유영역(```static``` , ```heap```)에 있는 값들을 스레드별로 변경하려다 문제가 생길 수 있으니 주의해야한다.
