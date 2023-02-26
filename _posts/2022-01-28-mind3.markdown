@@ -1,7 +1,7 @@
 ---
 title: "[회고] 30개월"
 layout: post
-date: 2022-01-28
+date: 2025-01-28
 image:
 headerImage: false
 tag:
